@@ -15,9 +15,6 @@ Symulator Systemu bankowego:
 
 • Dane: Imie, Nazwisko, pesel, nr telefonu, nazwisko panienskie matki, adres zameldowania, saldo konta/kont, 
 
-• Przepływ: Start → Wybór Pokoju → Lista Urządzeń → Zmiana Stanu → Zapis konfiguracji
-
-
 
 
 ZADANIE 2.
