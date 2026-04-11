@@ -1,0 +1,122 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\STUDIA\\Bank\\Bank\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|E:\\STUDIA\\Bank\\Bank\\Bank\\SystemBankowy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|solutionrelative:Bank\\SystemBankowy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|E:\\STUDIA\\Bank\\Bank\\Bank\\Rachunek.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|solutionrelative:Bank\\Rachunek.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|E:\\STUDIA\\Bank\\Bank\\Bank\\SystemBankowy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|solutionrelative:Bank\\SystemBankowy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|E:\\STUDIA\\Bank\\Bank\\Bank\\Uzytkownik.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|solutionrelative:Bank\\Uzytkownik.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|E:\\STUDIA\\Bank\\Bank\\Bank\\Bank.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|solutionrelative:Bank\\Bank.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|E:\\STUDIA\\Bank\\Bank\\Bank\\Uzytkownik.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0399FE46-1F54-4544-BE3E-E232ABDB8CDB}|Bank\\Bank.vcxproj|solutionrelative:Bank\\Uzytkownik.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SystemBankowy.cpp",
+              "DocumentMoniker": "E:\\STUDIA\\Bank\\Bank\\Bank\\SystemBankowy.cpp",
+              "RelativeDocumentMoniker": "Bank\\SystemBankowy.cpp",
+              "ToolTip": "E:\\STUDIA\\Bank\\Bank\\Bank\\SystemBankowy.cpp",
+              "RelativeToolTip": "Bank\\SystemBankowy.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-11T11:57:25.311Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Uzytkownik.cpp",
+              "DocumentMoniker": "E:\\STUDIA\\Bank\\Bank\\Bank\\Uzytkownik.cpp",
+              "RelativeDocumentMoniker": "Bank\\Uzytkownik.cpp",
+              "ToolTip": "E:\\STUDIA\\Bank\\Bank\\Bank\\Uzytkownik.cpp",
+              "RelativeToolTip": "Bank\\Uzytkownik.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-11T10:56:00.694Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Rachunek.h",
+              "DocumentMoniker": "E:\\STUDIA\\Bank\\Bank\\Bank\\Rachunek.h",
+              "RelativeDocumentMoniker": "Bank\\Rachunek.h",
+              "ToolTip": "E:\\STUDIA\\Bank\\Bank\\Bank\\Rachunek.h",
+              "RelativeToolTip": "Bank\\Rachunek.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-04-11T11:52:12.858Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SystemBankowy.h",
+              "DocumentMoniker": "E:\\STUDIA\\Bank\\Bank\\Bank\\SystemBankowy.h",
+              "RelativeDocumentMoniker": "Bank\\SystemBankowy.h",
+              "ToolTip": "E:\\STUDIA\\Bank\\Bank\\Bank\\SystemBankowy.h",
+              "RelativeToolTip": "Bank\\SystemBankowy.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-04-11T10:58:24.729Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Uzytkownik.h",
+              "DocumentMoniker": "E:\\STUDIA\\Bank\\Bank\\Bank\\Uzytkownik.h",
+              "RelativeDocumentMoniker": "Bank\\Uzytkownik.h",
+              "ToolTip": "E:\\STUDIA\\Bank\\Bank\\Bank\\Uzytkownik.h",
+              "RelativeToolTip": "Bank\\Uzytkownik.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-04-11T10:55:56.07Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Bank.cpp",
+              "DocumentMoniker": "E:\\STUDIA\\Bank\\Bank\\Bank\\Bank.cpp",
+              "RelativeDocumentMoniker": "Bank\\Bank.cpp",
+              "ToolTip": "E:\\STUDIA\\Bank\\Bank\\Bank\\Bank.cpp",
+              "RelativeToolTip": "Bank\\Bank.cpp",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAwwEEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-11T10:50:56.604Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
