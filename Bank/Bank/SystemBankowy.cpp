@@ -1,20 +1,29 @@
 #include "SystemBankowy.h"
+#include "Uzytkownik.h" 
 #include <iostream>
 
-void SystemBankowy::zarejestrujUzytkownika(string im, string naz, string p, string tel,
-    string pan, string adres, string h) {
-    bazaUzytkownikow.emplace_back(im, naz, p, tel, pan, adres, h);
-    cout << "Uzytkownik " << im << " " << naz << " zostal poprawnie zarejestrowany w systemie." << endl;
+using namespace std;
+
+SystemBankowy::SystemBankowy(string nazwa) {
+    nazwaBanku = nazwa;
+    cout << "[SystemBankowy] Uruchomiono system dla banku: " << nazwaBanku << endl;
+}
+
+SystemBankowy::~SystemBankowy() {
+    cout << "[SystemBankowy] Zamykanie systemu bankowego i czyszczenie pamieci..." << endl;
+}
+
+Rachunek* SystemBankowy::szukajRachunku(string numerKonta) {
+    cout << "[SystemBankowy] Przeszukuje baze w poszukiwaniu konta nr: " << numerKonta << endl;
+    return nullptr;
 }
 
 Uzytkownik* SystemBankowy::zaloguj(string pesel, string haslo) {
-    for (auto& uzytkownik : bazaUzytkownikow) {
-        if (uzytkownik.getPesel() == pesel && uzytkownik.sprawdzHaslo(haslo)) {
-            cout << "Logowanie zakonczone sukcesem!" << endl;
-            return &uzytkownik;
-        }
-    }
+    cout << "[SystemBankowy] Rozpoczeto probe logowania dla PESEL: " << pesel << endl;
+    return nullptr;
+}
 
-    cout << "Blad logowania: Niepoprawny PESEL lub haslo." << endl;
+Uzytkownik* SystemBankowy::zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo) {
+    cout << "[SystemBankowy] Przyjeto wniosek o rejestracje nowego klienta: " << imie << " " << nazwisko << endl;
     return nullptr;
 }
