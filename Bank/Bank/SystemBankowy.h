@@ -1,17 +1,25 @@
 #pragma once
-#include <vector>
 #include <string>
+#include <vector>
 #include "Uzytkownik.h"
 
-using namespace std;
+class Rachunek;
+class BazaDanych;
 
 class SystemBankowy {
 private:
-    vector<Uzytkownik> bazaUzytkownikow;
+    string nazwaBanku;
+    vector<Uzytkownik*> bazaKlientow;
+    BazaDanych* menedzerPlikow;
 
 public:
-    void zarejestrujUzytkownika(string im, string naz, string p, string tel,
-        string pan, string adres, string h);
+    SystemBankowy(string nazwa);
+
+    ~SystemBankowy();
+
+    Rachunek* szukajRachunku(string numerKonta);
 
     Uzytkownik* zaloguj(string pesel, string haslo);
+
+    Uzytkownik* zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo);
 };
