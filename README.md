@@ -6,7 +6,7 @@ Projekt to konsolowa aplikacja w języku C++ symulująca działanie nowoczesnego
 * Krystian Bielski
 * Daniel Nurkowski
 * Dawid Gargula
-* Kuba Latos
+* Jakub Latos
 
 ---
 
