@@ -6,7 +6,6 @@ using namespace std;
 
 class Rachunek;
 
-
 class Uzytkownik {
 private:
     string imie;

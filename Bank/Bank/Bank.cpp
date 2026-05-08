@@ -1,8 +1,10 @@
 ﻿#include <iostream>
 #include <string>
+#include <algorithm>
 #include "SystemBankowy.h"
 #include "Uzytkownik.h"
 #include "Rachunek.h"
+#include "Walidator.h"
 
 using namespace std;
 
@@ -50,8 +52,29 @@ int main() {
                 string im, naz, p, h;
                 cout << "Imie: "; cin >> im;
                 cout << "Nazwisko: "; cin >> naz;
-                cout << "PESEL: "; cin >> p;
-                cout << "Haslo: "; cin >> h;
+
+                bool peselOk = false;
+                while (!peselOk) {
+                    cout << "PESEL (11 cyfr): "; cin >> p;
+                    if (Walidator::czyPoprawnyPesel(p)) {
+                        peselOk = true;
+                    }
+                    else {
+                        cout << "[Blad] PESEL musi skladac sie z 11 cyfr!" << endl;
+                    }
+                }
+
+                bool hasloOk = false;
+                while (!hasloOk) {
+                    cout << "Haslo (min. 12 znakow, duza i mala litera, cyfra, znak spec.): "; cin >> h;
+                    if (Walidator::czySilneHaslo(h)) {
+                        hasloOk = true;
+                    }
+                    else {
+                        cout << "[Blad] Haslo jest za slabe, sprobuj ponownie!" << endl;
+                    }
+                }
+
                 bank.zarejestrujKlienta(im, naz, p, h);
             }
             else if (wybor == 2) {
@@ -79,7 +102,8 @@ int main() {
                 cout << "Podaj numer konta docelowego: "; cin >> cel;
                 cout << "Podaj kwote: "; cin >> kwota;
 
-                Rachunek* kontoCelowe = new Rachunek(cel, "PLN");
+                // Do celów symulacyjnych przyjmujemy, że konto docelowe jest normalne w PLN
+                Rachunek* kontoCelowe = new Rachunek(cel, TypRachunku::NORMALNE, "PLN");
                 aktywneKonto->wykonajPrzelew(kontoCelowe, kwota);
                 delete kontoCelowe;
             }
@@ -94,16 +118,55 @@ int main() {
         }
         else {
             if (wybor == 3) {
-                string typKonta;
-                cout << "Podaj typ konta: "; cin >> typKonta;
-                zalogowanyKlient->otworzKonto(typKonta);
+                string wpisanyTyp;
+                cout << "Dostepne typy: normalne, oszczednosciowe, walutowe" << endl;
+                cout << "Wpisz typ konta z klawiatury: ";
+                cin >> wpisanyTyp;
+
+                // Zamiana wpisanego słowa na małe litery
+                for (auto& c : wpisanyTyp) c = tolower(c);
+
+                TypRachunku wybranyTyp;
+                string waluta = "PLN";
+
+                if (wpisanyTyp == "normalne") {
+                    wybranyTyp = TypRachunku::NORMALNE;
+                }
+                else if (wpisanyTyp == "oszczednosciowe") {
+                    wybranyTyp = TypRachunku::OSZCZEDNOSCIOWE;
+                }
+                else if (wpisanyTyp == "walutowe") {
+                    wybranyTyp = TypRachunku::WALUTOWE;
+
+                    cout << "Dostepne waluty: euro, dolar, yen" << endl;
+                    cout << "Wpisz walute z klawiatury: ";
+                    string wpisanaWaluta;
+                    cin >> wpisanaWaluta;
+                    for (auto& c : wpisanaWaluta) c = tolower(c);
+
+                    if (wpisanaWaluta == "euro") waluta = "EUR";
+                    else if (wpisanaWaluta == "dolar") waluta = "USD";
+                    else if (wpisanaWaluta == "yen") waluta = "JPY";
+                    else {
+                        cout << "[Blad] Nie rozpoznano waluty. Ustawiam domyslnie EUR." << endl;
+                        waluta = "EUR";
+                    }
+                }
+                else {
+                    cout << "[Blad] Niepoprawny typ konta. Operacja anulowana." << endl;
+                    continue;
+                }
+
+                zalogowanyKlient->otworzKonto(wpisanyTyp);
+                cout << "[SYMULACJA] Tworze obiekt na podstawie Twojego wyboru..." << endl;
+                aktywneKonto = new Rachunek("111122223333", wybranyTyp, waluta);
             }
             else if (wybor == 4) {
                 zalogowanyKlient->wyswietlKonta();
             }
             else if (wybor == 5) {
-                cout << "[SYMULACJA] Tworze obiekt Rachunek, abys mogl przetestowac metody..." << endl;
-                aktywneKonto = new Rachunek("999988887777", "PLN");
+                cout << "[SYMULACJA] Test metody na domyslnym koncie..." << endl;
+                aktywneKonto = new Rachunek("999988887777", TypRachunku::NORMALNE, "PLN");
             }
             else if (wybor == 6) {
                 delete zalogowanyKlient;

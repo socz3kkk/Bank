@@ -6,9 +6,12 @@ using namespace std;
 
 class Transakcja;
 
+enum class TypRachunku { NORMALNE, OSZCZEDNOSCIOWE, WALUTOWE };
+
 class Rachunek {
 private:
     string numerKonta;
+    TypRachunku typKonta;
     vector<Transakcja*> historia;  // ZMIANA: wskaźniki zamiast obiektów
 
 protected:
@@ -16,13 +19,15 @@ protected:
     double saldo;
 
 public:
-    Rachunek(string numer, string waluta);
+    // Konstruktor wspierający typ i domyślną walutę
+    Rachunek(string numer, TypRachunku typ, string waluta = "PLN");
     virtual ~Rachunek();
 
     void wplac(double kwota);
-    virtual void wyswietlSzczegoly();
+    virtual void wyswietlSzczegoly() const;
     bool wykonajPrzelew(Rachunek* cel, double kwota);
     bool wyplac(double kwota);
 
     string getNumerKonta() const;
+    string getTypString() const;
 };
