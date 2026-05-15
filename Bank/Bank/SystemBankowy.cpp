@@ -1,4 +1,5 @@
 #include "json.hpp"
+using json = nlohmann::json;
 #include "SystemBankowy.h"
 #include "Uzytkownik.h" 
 #include <iostream>
