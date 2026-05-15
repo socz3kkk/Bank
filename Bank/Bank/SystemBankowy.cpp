@@ -49,5 +49,31 @@ Uzytkownik* SystemBankowy::zarejestrujKlienta(string imie, string nazwisko, stri
     file << std::setw(4) << j;
 
     file.close();
+    void SystemBankowy::wczytajZPliku()
+{
+    std::ifstream file("accounts.json");
+
+    if (!file.is_open())
+        return;
+
+    json j;
+
+    file >> j;
+
+    rachunki.clear();
+
+    for (const auto& item : j)
+    {
+        int id = item["id"];
+        std::string owner = item["owner"];
+        double balance = item["balance"];
+
+        Rachunek r(id, owner, balance);
+
+        rachunki.push_back(r);
+    }
+
+    file.close();
+}
 }
 }
