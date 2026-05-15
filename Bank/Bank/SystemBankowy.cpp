@@ -8,6 +8,7 @@ using json = nlohmann::json;
 
 using namespace std;
 
+
 SystemBankowy::SystemBankowy(string nazwa) {
     nazwaBanku = nazwa;
     cout << "[SystemBankowy] Uruchomiono system dla banku: " << nazwaBanku << endl;
@@ -30,4 +31,23 @@ Uzytkownik* SystemBankowy::zaloguj(string pesel, string haslo) {
 Uzytkownik* SystemBankowy::zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo) {
     cout << "[SystemBankowy] Przyjeto wniosek o rejestracje nowego klienta: " << imie << " " << nazwisko << endl;
     return nullptr;
+    void SystemBankowy::zapiszDoPliku()
+{
+    json j;
+
+    for (const auto& rachunek : rachunki)
+    {
+        j.push_back({
+            {"id", rachunek.getId()},
+            {"owner", rachunek.getWlasciciel()},
+            {"balance", rachunek.getSaldo()}
+        });
+    }
+
+    std::ofstream file("accounts.json");
+
+    file << std::setw(4) << j;
+
+    file.close();
+}
 }
