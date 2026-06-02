@@ -1,5 +1,7 @@
 #include "BazaDanych.h"
 #include "Uzytkownik.h"
+#include "Rachunek.h"
+#include "Transakcja.h"
 
 #include <fstream>
 #include <sstream>
@@ -18,14 +20,37 @@ void BazaDanych::zapiszDane(const vector<Uzytkownik*>& baza)
     if (!plik.is_open())
         return;
 
-    for (Uzytkownik* u : baza)
+    for (auto* uzytkownik : baza)
     {
-        plik
-            << u->getImie() << ";"
-            << u->getNazwisko() << ";"
-            << u->getPesel() << ";"
-            << u->getHaslo()
+        plik << "UZYTKOWNIK;"
+            << uzytkownik->getImie() << ";"
+            << uzytkownik->getNazwisko() << ";"
+            << uzytkownik->getPesel() << ";"
+            << uzytkownik->getHaslo()
             << endl;
+
+        for (auto* rachunek : uzytkownik->getKonta())
+        {
+            plik << "RACHUNEK;"
+                << rachunek->getNumerKonta() << ";"
+                << rachunek->getWaluta() << ";"
+                << rachunek->getSaldo()
+                << endl;
+
+            for (const auto& transakcja : rachunek->getHistoria())
+            {
+                plik << "TRANSAKCJA;"
+                    << transakcja.getIdTransakcji() << ";"
+                    << transakcja.getTypOperacji() << ";"
+                    << transakcja.getKwota() << ";"
+                    << transakcja.getData()
+                    << endl;
+            }
+
+            plik << "KONIEC_RACHUNKU" << endl;
+        }
+
+        plik << "KONIEC_UZYTKOWNIKA" << endl;
     }
 
     plik.close();
@@ -44,27 +69,35 @@ vector<Uzytkownik*> BazaDanych::wczytajDane()
 
     while (getline(plik, linia))
     {
-        stringstream ss(linia);
+        if (linia.rfind("UZYTKOWNIK;", 0) == 0)
+        {
+            stringstream ss(linia);
 
-        string imie;
-        string nazwisko;
-        string pesel;
-        string haslo;
+            string typ;
+            string imie;
+            string nazwisko;
+            string pesel;
+            string haslo;
 
-        getline(ss, imie, ';');
-        getline(ss, nazwisko, ';');
-        getline(ss, pesel, ';');
-        getline(ss, haslo, ';');
+            getline(ss, typ, ';');
+            getline(ss, imie, ';');
+            getline(ss, nazwisko, ';');
+            getline(ss, pesel, ';');
+            getline(ss, haslo, ';');
 
-        wynik.push_back(
-            new Uzytkownik(
-                imie,
-                nazwisko,
-                pesel,
-                haslo
-            )
-        );
+            Uzytkownik* u =
+                new Uzytkownik(
+                    imie,
+                    nazwisko,
+                    pesel,
+                    haslo
+                );
+
+            wynik.push_back(u);
+        }
     }
+
+    plik.close();
 
     return wynik;
 }
