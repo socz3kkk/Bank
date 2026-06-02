@@ -1,20 +1,19 @@
 #pragma once
 
-#include <vector>
 #include <string>
-
-using namespace std;
+#include <vector>
 
 class Uzytkownik;
 
-class BazaDanych {
+class BazaDanych
+{
 private:
-    string sciezkaPliku;
+    std::string sciezkaPliku;
 
 public:
-    BazaDanych(string sciezka);
+    BazaDanych(const std::string& sciezka);
 
-    void zapiszDane(const vector<Uzytkownik*>& baza);
+    void zapiszDane(const std::vector<Uzytkownik*>& baza);
 
-    vector<Uzytkownik*> wczytajDane();
+    std::vector<Uzytkownik*> wczytajDane();
 };
