@@ -2,8 +2,6 @@
 #include <string>
 #include <vector>
 #include "Uzytkownik.h"
-void zapiszDoPliku();
-void wczytajZPliku();
 
 class Rachunek;
 class BazaDanych;

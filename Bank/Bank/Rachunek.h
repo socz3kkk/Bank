@@ -7,7 +7,7 @@ class Rachunek {
 protected:
     string numerRachunku;
     double saldo;
-zapiszDoPliku();
+
 public:
     
 };

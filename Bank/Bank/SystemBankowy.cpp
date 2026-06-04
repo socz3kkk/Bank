@@ -1,13 +1,8 @@
-#include <fstream>
-#include <iomanip>
-#include "json.hpp"
-using json = nlohmann::json;
 #include "SystemBankowy.h"
 #include "Uzytkownik.h" 
 #include <iostream>
 
 using namespace std;
-
 
 SystemBankowy::SystemBankowy(string nazwa) {
     nazwaBanku = nazwa;
@@ -31,49 +26,4 @@ Uzytkownik* SystemBankowy::zaloguj(string pesel, string haslo) {
 Uzytkownik* SystemBankowy::zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo) {
     cout << "[SystemBankowy] Przyjeto wniosek o rejestracje nowego klienta: " << imie << " " << nazwisko << endl;
     return nullptr;
-    void SystemBankowy::zapiszDoPliku()
-{
-    json j;
-
-    for (const auto& rachunek : rachunki)
-    {
-        j.push_back({
-            {"id", rachunek.getId()},
-            {"owner", rachunek.getWlasciciel()},
-            {"balance", rachunek.getSaldo()}
-        });
-    }
-
-    std::ofstream file("accounts.json");
-
-    file << std::setw(4) << j;
-
-    file.close();
-    void SystemBankowy::wczytajZPliku()
-{
-    std::ifstream file("accounts.json");
-
-    if (!file.is_open())
-        return;
-
-    json j;
-
-    file >> j;
-
-    rachunki.clear();
-
-    for (const auto& item : j)
-    {
-        int id = item["id"];
-        std::string owner = item["owner"];
-        double balance = item["balance"];
-
-        Rachunek r(id, owner, balance);
-
-        rachunki.push_back(r);
-    }
-
-    file.close();
-}
-}
 }
