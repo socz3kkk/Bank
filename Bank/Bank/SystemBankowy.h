@@ -3,23 +3,17 @@
 #include <vector>
 #include "Uzytkownik.h"
 
-class Rachunek;
-class BazaDanych;
+using namespace std;
 
 class SystemBankowy {
 private:
     string nazwaBanku;
     vector<Uzytkownik*> bazaKlientow;
-    BazaDanych* menedzerPlikow;
 
 public:
-    SystemBankowy(string nazwa);
+    SystemBankowy(const string& nazwa);
+    virtual ~SystemBankowy();
 
-    ~SystemBankowy();
-
-    Rachunek* szukajRachunku(string numerKonta);
-
-    Uzytkownik* zaloguj(string pesel, string haslo);
-
-    Uzytkownik* zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo);
+    Uzytkownik* zaloguj(const string& pesel, const string& haslo) const;
+    Uzytkownik* zarejestrujKlienta(const string& imie, const string& nazwisko, const string& pesel, const string& haslo);
 };

@@ -1,11 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "Rachunek.h"
 
 using namespace std;
-
-class Rachunek;
-
 
 class Uzytkownik {
 private:
@@ -16,13 +14,13 @@ private:
     vector<Rachunek*> mojeKonta;
 
 public:
-    Uzytkownik(string imie, string nazwisko, string pesel, string haslo);
+    Uzytkownik(const string& imie, const string& nazwisko, const string& pesel, const string& haslo);
+    virtual ~Uzytkownik();
 
-    ~Uzytkownik();
-
-    void otworzKonto(string typKonta);
-    void wyswietlKonta();
-    void zamknijKonto(string numerKonta);
+    void otworzKonto(const string& typKonta);
+    void wyswietlKonta() const;
+    void zamknijKonto(const string& numerKonta);
+    Rachunek* pobierzRachunek(int indeks = 0);
 
     string getPesel() const;
     string getHaslo() const;
