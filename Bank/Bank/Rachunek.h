@@ -8,6 +8,8 @@ class Rachunek {
 protected:
     string numer_rachunku;
     double saldo;
+
+    // Metoda weryfikujaca czy wprowadzona kwota jest dodatnia
     bool czyKwotaPoprawna(const double kwota) const;
 
 public:
@@ -19,5 +21,6 @@ public:
     virtual double pobierzSaldo() const;
     string pobierzNumer() const;
 
+    // Przeciazenie operatora dla latwiejszego wypisywania w konsoli
     friend ostream& operator<<(ostream& os, const Rachunek& rachunek);
 };
