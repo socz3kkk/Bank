@@ -1,29 +1,44 @@
 #include "SystemBankowy.h"
-#include "Uzytkownik.h" 
 #include <iostream>
 
-using namespace std;
+constexpr size_t WYMAGANA_DLUGOSC_PESEL = 11;
 
-SystemBankowy::SystemBankowy(string nazwa) {
-    nazwaBanku = nazwa;
+SystemBankowy::SystemBankowy(const string& nazwa) : nazwaBanku(nazwa) {
     cout << "[SystemBankowy] Uruchomiono system dla banku: " << nazwaBanku << endl;
 }
 
 SystemBankowy::~SystemBankowy() {
-    cout << "[SystemBankowy] Zamykanie systemu bankowego i czyszczenie pamieci..." << endl;
+    for (Uzytkownik* u : bazaKlientow) {
+        delete u;
+    }
+    bazaKlientow.clear();
 }
 
-Rachunek* SystemBankowy::szukajRachunku(string numerKonta) {
-    cout << "[SystemBankowy] Przeszukuje baze w poszukiwaniu konta nr: " << numerKonta << endl;
+Uzytkownik* SystemBankowy::zaloguj(const string& pesel, const string& haslo) const {
+    if (pesel.empty() || haslo.empty()) return nullptr;
+
+    for (Uzytkownik* u : bazaKlientow) {
+        if (u->getPesel() == pesel && u->getHaslo() == haslo) {
+            return u;
+        }
+    }
     return nullptr;
 }
 
-Uzytkownik* SystemBankowy::zaloguj(string pesel, string haslo) {
-    cout << "[SystemBankowy] Rozpoczeto probe logowania dla PESEL: " << pesel << endl;
-    return nullptr;
-}
+Uzytkownik* SystemBankowy::zarejestrujKlienta(const string& imie, const string& nazwisko, const string& pesel, const string& haslo) {
+    if (pesel.length() != WYMAGANA_DLUGOSC_PESEL) {
+        cout << "Blad: PESEL musi miec dokladnie " << WYMAGANA_DLUGOSC_PESEL << " znakow.\n";
+        return nullptr;
+    }
 
-Uzytkownik* SystemBankowy::zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo) {
-    cout << "[SystemBankowy] Przyjeto wniosek o rejestracje nowego klienta: " << imie << " " << nazwisko << endl;
-    return nullptr;
+    for (const Uzytkownik* u : bazaKlientow) {
+        if (u->getPesel() == pesel) {
+            cout << "Blad: Uzytkownik o podanym PESEL juz istnieje!\n";
+            return nullptr;
+        }
+    }
+
+    Uzytkownik* nowy = new Uzytkownik(imie, nazwisko, pesel, haslo);
+    bazaKlientow.push_back(nowy);
+    return nowy;
 }
