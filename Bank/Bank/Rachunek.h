@@ -8,6 +8,9 @@ protected:
     string numer_rachunku;
     double saldo;
 
+    // Metoda pomocnicza
+    bool czyKwotaPoprawna(const double kwota) const;
+
 public:
     Rachunek(const string& numer, const double poczatkowe_saldo);
     virtual ~Rachunek() = default;
