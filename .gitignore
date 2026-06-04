@@ -1,1 +1,5 @@
 .vs/
+Bank/Bank/Bank.vcxproj
+*.filters
+*.exe
+*.pdb
