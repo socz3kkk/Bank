@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-class Rachunek;
+#include "Rachunek.h"
 
 using namespace std;
 
@@ -20,6 +20,7 @@ public:
     void otworzKonto(const string& typKonta);
     void wyswietlKonta() const;
     void zamknijKonto(const string& numerKonta);
+    Rachunek* pobierzRachunek(int indeks = 0);
 
     string getPesel() const;
     string getHaslo() const;
