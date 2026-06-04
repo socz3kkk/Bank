@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -7,8 +8,6 @@ class Rachunek {
 protected:
     string numer_rachunku;
     double saldo;
-
-    // Metoda pomocnicza
     bool czyKwotaPoprawna(const double kwota) const;
 
 public:
@@ -19,4 +18,6 @@ public:
     virtual void wyplac(const double kwota);
     virtual double pobierzSaldo() const;
     string pobierzNumer() const;
+
+    friend ostream& operator<<(ostream& os, const Rachunek& rachunek);
 };
