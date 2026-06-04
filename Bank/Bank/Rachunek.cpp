@@ -1,15 +1,14 @@
 #include "Rachunek.h"
 
-Rachunek::Rachunek(string numer, double poczatkoweSaldo) {
-    numerRachunku = numer;
-    saldo = poczatkoweSaldo;
+Rachunek::Rachunek(const string& numer, const double poczatkowe_saldo)
+    : numer_rachunku(numer), saldo(poczatkowe_saldo) {
 }
 
-void Rachunek::wplac(double kwota) {
+void Rachunek::wplac(const double kwota) {
     saldo += kwota;
 }
 
-void Rachunek::wyplac(double kwota) {
+void Rachunek::wyplac(const double kwota) {
     saldo -= kwota;
 }
 
@@ -18,5 +17,5 @@ double Rachunek::pobierzSaldo() const {
 }
 
 string Rachunek::pobierzNumer() const {
-    return numerRachunku;
+    return numer_rachunku;
 }
