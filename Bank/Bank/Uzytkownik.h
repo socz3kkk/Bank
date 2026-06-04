@@ -15,8 +15,7 @@ private:
     vector<Rachunek*> mojeKonta;
 
 public:
-    Uzytkownik(string imie, string nazwisko, string pesel, string haslo);
-
+    Uzytkownik(string imie = "", string nazwisko = "", string pesel = "", string haslo = "");
     ~Uzytkownik();
 
     void otworzKonto(string typKonta);

@@ -102,7 +102,6 @@ int main() {
                 cout << "Podaj numer konta docelowego: "; cin >> cel;
                 cout << "Podaj kwote: "; cin >> kwota;
 
-                // Do celów symulacyjnych przyjmujemy, że konto docelowe jest normalne w PLN
                 Rachunek* kontoCelowe = new Rachunek(cel, TypRachunku::NORMALNE, "PLN");
                 aktywneKonto->wykonajPrzelew(kontoCelowe, kwota);
                 delete kontoCelowe;
@@ -123,7 +122,6 @@ int main() {
                 cout << "Wpisz typ konta z klawiatury: ";
                 cin >> wpisanyTyp;
 
-                // Zamiana wpisanego słowa na małe litery
                 for (auto& c : wpisanyTyp) c = tolower(c);
 
                 TypRachunku wybranyTyp;

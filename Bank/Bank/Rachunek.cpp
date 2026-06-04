@@ -1,4 +1,5 @@
 #include "Rachunek.h"
+#include "Transakcja.h"
 #include <iostream>
 
 using namespace std;
@@ -12,15 +13,16 @@ Rachunek::Rachunek(string numer, TypRachunku typ, string waluta) {
 }
 
 Rachunek::~Rachunek() {
+    for (auto t : historia) {
+        delete t;
+    }
+    historia.clear();
     cout << "[Rachunek] Zamknieto rachunek nr: " << numerKonta << endl;
 }
 
 void Rachunek::wplac(double kwota) {
-    if (kwota <= 0) {
-        cout << "[Blad] Kwota wplaty musi byc dodatnia." << endl;
-        return;
-    }
     saldo += kwota;
+    dodajTransakcje(new Transakcja(kwota, "Wplata"));
     cout << "[Rachunek] Wplata kwoty " << kwota << " " << walutaPodstawowa << " na rachunek " << numerKonta << endl;
 }
 
@@ -30,25 +32,27 @@ void Rachunek::wyswietlSzczegoly() const {
     cout << "Typ:    " << getTypString() << endl;
     cout << "Waluta: " << walutaPodstawowa << endl;
     cout << "Saldo:  " << saldo << " " << walutaPodstawowa << endl;
+
+    if (!historia.empty()) {
+        cout << "--- Historia Transakcji ---" << endl;
+        for (auto t : historia) {
+            t->wyswietlTransakcje();
+        }
+    }
     cout << "-----------------------" << endl;
 }
 
 bool Rachunek::wykonajPrzelew(Rachunek* cel, double kwota) {
-    if (kwota <= 0 || kwota > saldo) {
-        cout << "[Blad] Brak srodkow lub niepoprawna kwota do przelewu." << endl;
-        return false;
-    }
     saldo -= kwota;
+    cel->wplac(kwota);
+    dodajTransakcje(new Transakcja(-kwota, "Przelew wychodzacy"));
     cout << "[Rachunek] Zlecono przelew z konta " << numerKonta << " na kwote: " << kwota << " " << walutaPodstawowa << endl;
     return true;
 }
 
 bool Rachunek::wyplac(double kwota) {
-    if (kwota <= 0 || kwota > saldo) {
-        cout << "[Blad] Niewystarczajace srodki na wyplate." << endl;
-        return false;
-    }
     saldo -= kwota;
+    dodajTransakcje(new Transakcja(-kwota, "Wyplata"));
     cout << "[Rachunek] Wyplata " << kwota << " " << walutaPodstawowa << " z rachunku " << numerKonta << endl;
     return true;
 }
@@ -64,4 +68,8 @@ string Rachunek::getTypString() const {
     case TypRachunku::WALUTOWE: return "Walutowe";
     default: return "Nieznane";
     }
+}
+
+void Rachunek::dodajTransakcje(Transakcja* t) {
+    historia.push_back(t);
 }

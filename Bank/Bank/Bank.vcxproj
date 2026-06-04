@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0399fe46-1f54-4544-be3e-e232abdb8cdb}</ProjectGuid>
+    <ProjectGuid>{8a9212be-574a-4f58-aa88-ea9ca98b8531}</ProjectGuid>
     <RootNamespace>Bank</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -129,13 +129,20 @@
   <ItemGroup>
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Rachunek.cpp" />
+    <ClCompile Include="RachunekOszczednosciowy.cpp" />
+    <ClCompile Include="RachunekWalutowy.cpp" />
     <ClCompile Include="SystemBankowy.cpp" />
+    <ClCompile Include="Transakcja.cpp" />
     <ClCompile Include="Uzytkownik.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rachunek.h" />
+    <ClInclude Include="RachunekOszczednosciowy.h" />
+    <ClInclude Include="RachunekWalutowy.h" />
     <ClInclude Include="SystemBankowy.h" />
+    <ClInclude Include="Transakcja.h" />
     <ClInclude Include="Uzytkownik.h" />
+    <ClInclude Include="Walidator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,7 +7,6 @@ class Walidator {
 public:
     static bool czyPoprawnyPesel(const std::string& pesel) {
         if (pesel.length() != 11) return false;
-        // Sprawdzenie, czy składa się z samych cyfr
         return std::all_of(pesel.begin(), pesel.end(), ::isdigit);
     }
 
