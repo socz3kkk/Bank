@@ -5,15 +5,8 @@
 
 using namespace std;
 
-constexpr int WYJSCIE = 0;
-constexpr int REJESTRACJA = 1;
-constexpr int LOGOWANIE = 2;
-constexpr int OTWORZ_KONTO = 3;
-constexpr int WYSWIETL_KONTA = 4;
-constexpr int WYLOGUJ = 5;
-
 int main() {
-    SystemBankowy bank(string("Narodowy Bank"));
+    SystemBankowy bank("Narodowy Bank");
     Uzytkownik* zalogowanyKlient = nullptr;
     int wybor;
 
@@ -21,65 +14,63 @@ int main() {
         cout << "\n=== SYSTEM BANKOWY ===" << endl;
 
         if (zalogowanyKlient == nullptr) {
-            cout << REJESTRACJA << ". Rejestracja\n";
-            cout << LOGOWANIE << ". Logowanie\n";
+            cout << "1. Rejestracja" << endl;
+            cout << "2. Logowanie" << endl;
         }
         else {
-            cout << OTWORZ_KONTO << ". Otworz nowe konto bankowe\n";
-            cout << WYSWIETL_KONTA << ". Wyswietl moje konta\n";
-            cout << WYLOGUJ << ". Wyloguj\n";
+            cout << "3. Otworz nowe konto bankowe" << endl;
+            cout << "4. Wyswietl moje konta" << endl;
+            cout << "5. Wyloguj" << endl;
         }
-        cout << WYJSCIE << ". Wyjdz z programu\n";
+        cout << "0. Wyjdz z programu" << endl;
         cout << "Wybor: ";
+        cin >> wybor;
 
-        if (!(cin >> wybor)) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "Blad: Nieprawidlowy format danych. Podaj cyfre.\n";
-            continue;
+        if (wybor == 0) {
+            break;
         }
-
-        if (wybor == WYJSCIE) break;
 
         if (zalogowanyKlient == nullptr) {
-            if (wybor == REJESTRACJA) {
+            if (wybor == 1) {
                 string im, naz, p, h;
                 cout << "Imie: "; cin >> im;
                 cout << "Nazwisko: "; cin >> naz;
                 cout << "PESEL: "; cin >> p;
                 cout << "Haslo: "; cin >> h;
 
-                if (bank.zarejestrujKlienta(im, naz, p, h) != nullptr) {
-                    cout << "Zlecono rejestracje!\n";
-                }
+                bank.zarejestrujKlienta(im, naz, p, h);
+                cout << "Zlecono rejestracje!" << endl;
             }
-            else if (wybor == LOGOWANIE) {
+            else if (wybor == 2) {
                 string p, h;
                 cout << "PESEL: "; cin >> p;
                 cout << "Haslo: "; cin >> h;
 
                 zalogowanyKlient = bank.zaloguj(p, h);
+
                 if (zalogowanyKlient != nullptr) {
-                    cout << "Zalogowano pomyslnie!\n";
+                    cout << "Zalogowano pomyslnie!" << endl;
                 }
                 else {
-                    cout << "Bledny PESEL lub haslo. Sprobuj ponownie.\n";
+                    cout << "Bledny PESEL lub haslo. Sprobuj ponownie" << endl;
+
                 }
             }
         }
         else {
-            if (wybor == OTWORZ_KONTO) {
+            if (wybor == 3) {
                 string typKonta;
                 cout << "Podaj typ konta (np. Oszczednosciowe, Walutowe): ";
                 cin >> typKonta;
+
                 zalogowanyKlient->otworzKonto(typKonta);
             }
-            else if (wybor == WYSWIETL_KONTA) {
+            else if (wybor == 4) {
                 zalogowanyKlient->wyswietlKonta();
             }
-            else if (wybor == WYLOGUJ) {
+            else if (wybor == 5) {
                 zalogowanyKlient = nullptr;
-                cout << "Wylogowano pomyslnie.\n";
+                cout << "Wylogowano pomyslnie." << endl;
             }
         }
     }
