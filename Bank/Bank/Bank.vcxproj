@@ -129,20 +129,11 @@
   <ItemGroup>
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Rachunek.cpp" />
-    <ClCompile Include="RachunekOszczednosciowy.cpp" />
-    <ClCompile Include="RachunekWalutowy.cpp" />
-    <ClCompile Include="SystemBankowy.cpp" />
     <ClCompile Include="Transakcja.cpp" />
-    <ClCompile Include="Uzytkownik.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rachunek.h" />
-    <ClInclude Include="RachunekOszczednosciowy.h" />
-    <ClInclude Include="RachunekWalutowy.h" />
-    <ClInclude Include="SystemBankowy.h" />
     <ClInclude Include="Transakcja.h" />
-    <ClInclude Include="Uzytkownik.h" />
-    <ClInclude Include="Walidator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

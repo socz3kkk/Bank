@@ -1,9 +1,5 @@
 ﻿  Bank.cpp
   Rachunek.cpp
-  RachunekOszczednosciowy.cpp
-  RachunekWalutowy.cpp
-  SystemBankowy.cpp
+C:\Users\jakub\Documents\Projekt\Bank\Bank\Bank\Bank.cpp(4,10): error C1083: Nie można otworzyć pliku dołącz: 'SystemBankowy.h': No such file or directory
   Transakcja.cpp
-  Uzytkownik.cpp
   Generowanie kodu...
-  Bank.vcxproj -> C:\Users\jakub\Desktop\Bank\x64\Debug\Bank.exe
