@@ -17,6 +17,12 @@ Uzytkownik::~Uzytkownik() {
 }
 
 void Uzytkownik::otworzKonto(const string& typKonta) {
+    constexpr size_t LIMIT_KONT = 3;
+    if (mojeKonta.size() >= LIMIT_KONT) {
+        cout << "[BLAD] Odmowa! Osiagnieto maksymalny limit kont (" << LIMIT_KONT << ") dla tego profilu.\n";
+        return;
+    }
+
     string przykladowyNumer = "PL123456789";
 
     Rachunek* noweKonto = new Rachunek(przykladowyNumer, 0.0);
