@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
 #include "Uzytkownik.h"
 
 using namespace std;
@@ -8,7 +9,7 @@ using namespace std;
 class SystemBankowy {
 private:
     string nazwaBanku;
-    vector<Uzytkownik*> bazaKlientow;
+    vector<unique_ptr<Uzytkownik>> bazaKlientow;
 
 public:
     SystemBankowy(const string& nazwa);

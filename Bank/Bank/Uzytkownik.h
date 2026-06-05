@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
 #include "Rachunek.h"
 
 using namespace std;
@@ -11,7 +12,7 @@ private:
     string nazwisko;
     string pesel;
     string haslo;
-    vector<Rachunek*> mojeKonta;
+    vector<unique_ptr<Rachunek>> mojeKonta;
 
 public:
     Uzytkownik(const string& imie, const string& nazwisko, const string& pesel, const string& haslo);

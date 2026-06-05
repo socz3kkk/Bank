@@ -1,5 +1,7 @@
 #include "Uzytkownik.h"
+#include "Kredytowy.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -9,10 +11,6 @@ Uzytkownik::Uzytkownik(const string& imie, const string& nazwisko, const string&
 
 Uzytkownik::~Uzytkownik() {
     cout << "[Uzytkownik] Usunieto profil: " << imie << " " << nazwisko << endl;
-
-    for (Rachunek* r : mojeKonta) {
-        delete r;
-    }
     mojeKonta.clear();
 }
 
@@ -22,11 +20,15 @@ void Uzytkownik::otworzKonto(const string& typKonta) {
         cout << "[BLAD] Odmowa! Osiagnieto maksymalny limit kont (" << LIMIT_KONT << ") dla tego profilu.\n";
         return;
     }
+    
+    string przykladowyNumer = "PL123456789_" + to_string(mojeKonta.size() + 1);
 
-    string przykladowyNumer = "PL123456789";
-
-    Rachunek* noweKonto = new Rachunek(przykladowyNumer, 0.0);
-    mojeKonta.push_back(noweKonto);
+    if (typKonta == "Kredytowe") {
+        mojeKonta.push_back(make_unique<Kredytowy>(przykladowyNumer, 0.0, 5000.0));
+    }
+    else {
+        mojeKonta.push_back(make_unique<Rachunek>(przykladowyNumer, 0.0));
+    }
 
     cout << "Otworzono nowe konto typu: " << typKonta << "\n";
     cout << "Przypisany numer konta: " << przykladowyNumer << "\n";
@@ -41,8 +43,7 @@ void Uzytkownik::wyswietlKonta() const {
     }
 
     for (size_t i = 0; i < mojeKonta.size(); i++) {
-        cout << i + 1 << ". Konto nr: " << mojeKonta[i]->pobierzNumer()
-            << " | Saldo: " << mojeKonta[i]->pobierzSaldo() << " PLN\n";
+        cout << i + 1 << ". Konto nr: " << mojeKonta[i]->pobierzNumer()<< "\n";
     }
 }
 
@@ -55,7 +56,7 @@ Rachunek* Uzytkownik::pobierzRachunek(int indeks) {
         return nullptr;
     }
     if (indeks >= 0 && indeks < mojeKonta.size()) {
-        return mojeKonta[indeks];
+        return mojeKonta[indeks].get();
     }
     return nullptr;
 }

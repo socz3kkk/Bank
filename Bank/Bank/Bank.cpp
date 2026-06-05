@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 #include <limits>
+#include <stdexcept>
 #include "SystemBankowy.h"
 #include "Uzytkownik.h"
 #include "Rachunek.h"
@@ -112,10 +113,27 @@ int main() {
         else {
             switch (wybor) {
             case OTWORZ_KONTO: {
-                string typKonta;
-                cout << "Podaj typ konta (np. Oszczednosciowe, Walutowe): ";
-                cin >> typKonta;
-                zalogowanyKlient->otworzKonto(typKonta);
+                int opcjaKonta;
+                cout << "Wybierz typ konta z listy:\n";
+                cout << "1. Konto Standardowe\n";
+                cout << "2. Konto Kredytowe\n";
+                cout << "Wybor: ";
+
+                if (!(cin >> opcjaKonta)) {
+                    wyczyscBufor();
+                    cout << "[BLAD] Niepoprawny format wyboru.\n";
+                    break;
+                }
+
+                if (opcjaKonta == 1) {
+                    zalogowanyKlient->otworzKonto("Standardowe");
+                }
+                else if (opcjaKonta == 2) {
+                    zalogowanyKlient->otworzKonto("Kredytowe");
+                }
+                else {
+                    cout << "[BLAD] Niepoprawny numer opcji.\n";
+                }
                 break;
             }
             case WYSWIETL_KONTA: {
@@ -123,10 +141,31 @@ int main() {
                 break;
             }
             case WPLAC_SRODKI:
-            case WYPLAC_SRODKI: {
-                Rachunek* konto = zalogowanyKlient->pobierzRachunek();
-                if (konto == nullptr) {
+            case WYPLAC_SRODKI:
+            case SPRAWDZ_SALDO: {
+                if (zalogowanyKlient->pobierzRachunek(0) == nullptr) {
                     cout << "[UWAGA] Nie masz jeszcze konta! Uzyj opcji 'Otworz nowe konto bankowe'.\n";
+                    break;
+                }
+
+                zalogowanyKlient->wyswietlKonta();
+                cout << "Wybierz numer konta do operacji (indeks z listy): ";
+                int wybranyIndeks;
+
+                if (!(cin >> wybranyIndeks) || wybranyIndeks < 1) {
+                    wyczyscBufor();
+                    cout << "[BLAD] Nieprawidlowy numer indeksu!\n";
+                    break;
+                }
+
+                Rachunek* konto = zalogowanyKlient->pobierzRachunek(wybranyIndeks - 1);
+                if (konto == nullptr) {
+                    cout << "[BLAD] Nie znaleziono konta o podanym indeksie.\n";
+                    break;
+                }
+
+                if (wybor == SPRAWDZ_SALDO) {
+                    cout << "[INFORMACJA] Aktualne saldo Twojego konta wynosi: " << konto->pobierzSaldo() << " PLN\n";
                     break;
                 }
 
@@ -139,29 +178,19 @@ int main() {
                     break;
                 }
 
-                if (wybor == WPLAC_SRODKI) {
-                    konto->wplac(kwota);
-                    cout << "[SUKCES] Pomyslnie wplacono " << kwota << " PLN.\n";
-                }
-                else {
-                    if (konto->pobierzSaldo() < kwota) {
-                        cout << "[BLAD] Operacja odrzucona. Brak wystarczajacych srodkow na koncie!\n";
-                        cout << "[INFORMACJA] Twoje obecne saldo wynosi: " << konto->pobierzSaldo() << " PLN\n";
+                try {
+                    if (wybor == WPLAC_SRODKI) {
+                        konto->wplac(kwota);
+                        cout << "[SUKCES] Pomyslnie wplacono " << kwota << " PLN.\n";
                     }
-                    else {
+                    else if (wybor == WYPLAC_SRODKI) {
                         konto->wyplac(kwota);
                         cout << "[SUKCES] Pomyslnie wyplacono " << kwota << " PLN.\n";
                     }
                 }
-                break;
-            }
-            case SPRAWDZ_SALDO: {
-                Rachunek* konto = zalogowanyKlient->pobierzRachunek();
-                if (konto == nullptr) {
-                    cout << "[UWAGA] Nie masz jeszcze konta!\n";
-                    break;
+                catch (const exception& e) {
+                    cout << "[BLAD] Operacja odrzucona: " << e.what() << "\n";
                 }
-                cout << "[INFORMACJA] Aktualne saldo Twojego konta wynosi: " << konto->pobierzSaldo() << " PLN\n";
                 break;
             }
             case WYLOGUJ: {

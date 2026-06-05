@@ -8,18 +8,15 @@ SystemBankowy::SystemBankowy(const string& nazwa) : nazwaBanku(nazwa) {
 }
 
 SystemBankowy::~SystemBankowy() {
-    for (Uzytkownik* u : bazaKlientow) {
-        delete u;
-    }
     bazaKlientow.clear();
 }
 
 Uzytkownik* SystemBankowy::zaloguj(const string& pesel, const string& haslo) const {
     if (pesel.empty() || haslo.empty()) return nullptr;
 
-    for (Uzytkownik* u : bazaKlientow) {
+    for (const auto& u : bazaKlientow) {
         if (u->getPesel() == pesel && u->getHaslo() == haslo) {
-            return u;
+            return u.get();
         }
     }
     return nullptr;
@@ -31,14 +28,13 @@ Uzytkownik* SystemBankowy::zarejestrujKlienta(const string& imie, const string& 
         return nullptr;
     }
 
-    for (const Uzytkownik* u : bazaKlientow) {
+    for (const auto& u : bazaKlientow) {
         if (u->getPesel() == pesel) {
             cout << "Blad: Uzytkownik o podanym PESEL juz istnieje!\n";
             return nullptr;
         }
     }
 
-    Uzytkownik* nowy = new Uzytkownik(imie, nazwisko, pesel, haslo);
-    bazaKlientow.push_back(nowy);
-    return nowy;
+    bazaKlientow.push_back(make_unique<Uzytkownik>(imie, nazwisko, pesel, haslo));
+    return bazaKlientow.back().get();
 }
