@@ -1,25 +1,41 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory> 
 #include "Uzytkownik.h"
 
-class Rachunek;
-class BazaDanych;
+using namespace std;
 
+/**
+ * @class SystemBankowy
+ * @brief Centralny system przechowujacy baze klientow banku.
+ */
 class SystemBankowy {
 private:
     string nazwaBanku;
-    vector<Uzytkownik*> bazaKlientow;
-    BazaDanych* menedzerPlikow;
+    vector<unique_ptr<Uzytkownik>> bazaKlientow;
 
 public:
-    SystemBankowy(string nazwa);
+    SystemBankowy(const string& nazwa);
+    virtual ~SystemBankowy();
 
-    ~SystemBankowy();
+    /**
+     * @brief Loguje uzytkownika na podstawie podanych danych.
+     * @param pesel Numer PESEL uzytkownika.
+     * @param haslo Haslo uzytkownika.
+     * @return Uzytkownik* Wskaznik do zalogowanego profilu.
+     * @throws std::invalid_argument w przypadku zlych danych logowania.
+     */
+    Uzytkownik* zaloguj(const string& pesel, const string& haslo) const;
 
-    Rachunek* szukajRachunku(string numerKonta);
-
-    Uzytkownik* zaloguj(string pesel, string haslo);
-
-    Uzytkownik* zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo);
+    /**
+     * @brief Rejestruje nowego uzytkownika w systemie bankowym.
+     * @param imie Imie klienta.
+     * @param nazwisko Nazwisko klienta.
+     * @param pesel Numer PESEL.
+     * @param haslo Haslo dostepu.
+     * @return Uzytkownik* Wskaznik do nowo zarejestrowanego profilu.
+     * @throws std::invalid_argument w przypadku gdy PESEL istnieje lub ma zla dlugosc.
+     */
+    Uzytkownik* zarejestrujKlienta(const string& imie, const string& nazwisko, const string& pesel, const string& haslo);
 };

@@ -1,36 +1,69 @@
 #include "Uzytkownik.h"
+#include "Kredytowy.h" 
 #include <iostream>
+#include <string>
+#include <stdexcept>
 
 using namespace std;
 
-Uzytkownik::Uzytkownik(string imie, string nazwisko, string pesel, string haslo) {
-    this->imie = imie;
-    this->nazwisko = nazwisko;
-    this->pesel = pesel;
-    this->haslo = haslo;
-    cout << "[Uzytkownik] Utworzono profil dla: " << this->imie << " " << this->nazwisko << endl;
+Uzytkownik::Uzytkownik(const string& imie, const string& nazwisko, const string& pesel, const string& haslo)
+    : imie(imie), nazwisko(nazwisko), pesel(pesel), haslo(haslo) {
 }
 
 Uzytkownik::~Uzytkownik() {
-    cout << "[Uzytkownik] Usunieto z pamieci profil: " << imie << " " << nazwisko << endl;
+    mojeKonta.clear();
 }
 
-void Uzytkownik::otworzKonto(string typKonta) {
-    cout << "[Uzytkownik] Otwieram nowe konto typu: " << typKonta << endl;
+void Uzytkownik::otworzKonto(const string& typKonta) {
+    constexpr size_t LIMIT_KONT = 3;
+    if (mojeKonta.size() >= LIMIT_KONT) {
+        throw length_error("Odmowa! Osiagnieto maksymalny limit kont dla tego profilu.");
+    }
+
+    string przykladowyNumer = "PL123456789_" + to_string(mojeKonta.size() + 1);
+
+    if (typKonta == "Kredytowe") {
+        mojeKonta.push_back(make_unique<Kredytowy>(przykladowyNumer, 0.0, 5000.0));
+    }
+    else if (typKonta == "Standardowe") {
+        mojeKonta.push_back(make_unique<Rachunek>(przykladowyNumer, 0.0));
+    }
+    else {
+        throw invalid_argument("Nieznany typ konta!");
+    }
+
+    cout << "[SUKCES] Otworzono nowe konto typu: " << typKonta << " (" << przykladowyNumer << ")\n";
 }
 
-void Uzytkownik::wyswietlKonta() {
-    cout << "[Uzytkownik] Pobieram i wyswietlam liste wszystkich kont uzytkownika..." << endl;
+void Uzytkownik::wyswietlKonta() const {
+    if (mojeKonta.empty()) {
+        cout << "Nie posiadasz jeszcze zadnych otwartych kont.\n";
+        return;
+    }
+
+    for (size_t i = 0; i < mojeKonta.size(); i++) {
+        cout << i + 1 << ". Konto nr: " << mojeKonta[i]->pobierzNumer() << "\n";
+    }
 }
 
-void Uzytkownik::zamknijKonto(string numerKonta) {
-    cout << "[Uzytkownik] Trwa zamykanie konta o numerze: " << numerKonta << endl;
+void Uzytkownik::zamknijKonto(const string& numerKonta) {
+    cout << "Zamykanie konta " << numerKonta << "...\n";
 }
 
-string Uzytkownik::getPesel() const {
-    return pesel;
+Rachunek* Uzytkownik::pobierzRachunek(int indeks) {
+    if (mojeKonta.empty()) {
+        throw out_of_range("Brak otwartych kont bankowych!");
+    }
+    if (indeks < 0 || indeks >= mojeKonta.size()) {
+        throw out_of_range("Nieprawidlowy indeks konta.");
+    }
+    return mojeKonta[indeks].get();
 }
 
-string Uzytkownik::getHaslo() const {
-    return haslo;
+string Uzytkownik::getPesel() const { return pesel; }
+string Uzytkownik::getHaslo() const { return haslo; }
+
+ostream& operator<<(ostream& os, const Uzytkownik& u) {
+    os << u.imie << " " << u.nazwisko << " (PESEL: " << u.pesel << ") | Konta: " << u.mojeKonta.size();
+    return os;
 }
