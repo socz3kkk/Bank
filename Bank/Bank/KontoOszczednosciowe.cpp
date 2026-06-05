@@ -1,5 +1,6 @@
 #include "KontoOszczednosciowe.h"
 #include <iostream>
+#include <stdexcept> // Do obsługi wyjątków zgodnie ze stylem klasy Kredytowy
 
 using namespace std;
 
@@ -7,23 +8,18 @@ KontoOszczednosciowe::KontoOszczednosciowe(string numerRachunku, double poczatko
     : Rachunek(numerRachunku, poczatkoweSaldo), oprocentowanie(oprocentowanie), liczbaWyplat(0) {
 }
 
-void KontoOszczednosciowe::naliczOdsetki() {
+void KontoOszczednosciowe::wykonajOperacjeOkresowa() {
     if (saldo <= 0.0) return;
 
     double odsetki = saldo * (oprocentowanie / 100.0);
     saldo += odsetki;
-    cout << "Naliczono odsetki: " << odsetki << " PLN.\n";
+    cout << "[Konto Oszczednosciowe " << numerRachunku << "] Automatycznie naliczono odsetki: " << odsetki << " PLN.\n";
 }
 
-bool KontoOszczednosciowe::wplac(double kwota) {
-    if (kwota <= 0.0) return false;
-
-    saldo += kwota;
-    return true;
-}
-
-bool KontoOszczednosciowe::wyplac(double kwota) {
-    if (kwota <= 0.0) return false;
+void KontoOszczednosciowe::wyplac(const double kwota) {
+    if (kwota <= 0.0) {
+        throw std::invalid_argument("Kwota wyplaty musi byc dodatnia.");
+    }
 
     double calkowityKoszt = kwota;
     if (liczbaWyplat >= MAX_DARMOWYCH_WYPLAT) {
@@ -31,13 +27,11 @@ bool KontoOszczednosciowe::wyplac(double kwota) {
     }
 
     if (saldo < calkowityKoszt) {
-        cout << "Blad: Brak wystarczajacych srodkow (uwzgledniajac potencjalne oplaty).\n";
-        return false;
+        throw std::invalid_argument("Brak wystarczajacych srodkow na koncie oszczednosciowym (uwzgledniajac prowizje).");
     }
 
     saldo -= calkowityKoszt;
     liczbaWyplat++;
-    return true;
 }
 
 void KontoOszczednosciowe::wyswietlInformacje() const {
@@ -45,5 +39,5 @@ void KontoOszczednosciowe::wyswietlInformacje() const {
     cout << "Numer: " << numerRachunku << "\n";
     cout << "Saldo: " << saldo << " PLN\n";
     cout << "Oprocentowanie: " << oprocentowanie << "%\n";
-    cout << "Liczba wykonanych wyplat: " << liczbaWyplat << "\n";
+    cout << "Wykonane wyplaty: " << liczbaWyplat << "\n";
 }

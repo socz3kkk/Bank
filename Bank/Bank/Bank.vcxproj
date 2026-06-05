@@ -130,7 +130,6 @@
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="KontoOszczednosciowe.cpp" />
     <ClCompile Include="KontoWalutowe.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Rachunek.cpp" />
     <ClCompile Include="SystemBankowy.cpp" />
     <ClCompile Include="Uzytkownik.cpp" />
