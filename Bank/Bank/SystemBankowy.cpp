@@ -1,5 +1,6 @@
 #include "SystemBankowy.h"
 #include <iostream>
+#include <stdexcept>
 
 constexpr size_t WYMAGANA_DLUGOSC_PESEL = 11;
 
@@ -8,37 +9,33 @@ SystemBankowy::SystemBankowy(const string& nazwa) : nazwaBanku(nazwa) {
 }
 
 SystemBankowy::~SystemBankowy() {
-    for (Uzytkownik* u : bazaKlientow) {
-        delete u;
-    }
     bazaKlientow.clear();
 }
 
 Uzytkownik* SystemBankowy::zaloguj(const string& pesel, const string& haslo) const {
-    if (pesel.empty() || haslo.empty()) return nullptr;
+    if (pesel.empty() || haslo.empty()) {
+        throw invalid_argument("Dane logowania nie moga byc puste!");
+    }
 
-    for (Uzytkownik* u : bazaKlientow) {
+    for (const auto& u : bazaKlientow) {
         if (u->getPesel() == pesel && u->getHaslo() == haslo) {
-            return u;
+            return u.get();
         }
     }
-    return nullptr;
+    throw invalid_argument("Bledny PESEL lub haslo.");
 }
 
 Uzytkownik* SystemBankowy::zarejestrujKlienta(const string& imie, const string& nazwisko, const string& pesel, const string& haslo) {
     if (pesel.length() != WYMAGANA_DLUGOSC_PESEL) {
-        cout << "Blad: PESEL musi miec dokladnie " << WYMAGANA_DLUGOSC_PESEL << " znakow.\n";
-        return nullptr;
+        throw invalid_argument("PESEL musi miec dokladnie " + to_string(WYMAGANA_DLUGOSC_PESEL) + " znakow.");
     }
 
-    for (const Uzytkownik* u : bazaKlientow) {
+    for (const auto& u : bazaKlientow) {
         if (u->getPesel() == pesel) {
-            cout << "Blad: Uzytkownik o podanym PESEL juz istnieje!\n";
-            return nullptr;
+            throw invalid_argument("Uzytkownik o podanym numerze PESEL juz istnieje w bazie.");
         }
     }
 
-    Uzytkownik* nowy = new Uzytkownik(imie, nazwisko, pesel, haslo);
-    bazaKlientow.push_back(nowy);
-    return nowy;
+    bazaKlientow.push_back(make_unique<Uzytkownik>(imie, nazwisko, pesel, haslo));
+    return bazaKlientow.back().get();
 }

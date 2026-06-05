@@ -1,1 +1,8 @@
 .vs/
+*.vcxproj
+*.pdb
+*.exe
+*.filters
+*.vcxproj
+*.exe
+*.pdb
