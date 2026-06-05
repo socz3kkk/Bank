@@ -21,6 +21,10 @@ constexpr int WYLOGUJ = 8;
 
 constexpr int DLUGOSC_PESEL = 11;
 
+/**
+ * @brief Funkcja czyszczaca bufor strumienia wejsciowego.
+ * Zapobiega zawieszeniu sie programu w przypadku wczytania niepoprawnego typu danych.
+ */
 void wyczyscBufor() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -41,7 +45,7 @@ int main() {
             cout << LOGOWANIE << ". Logowanie\n";
         }
         else {
-            cout << " Zalogowano jako (PESEL): " << zalogowanyKlient->getPesel() << "\n";
+            cout << " Zalogowano jako: " << *zalogowanyKlient << "\n";
             cout << "------------------------------------\n";
             cout << OTWORZ_KONTO << ". Otworz nowe konto bankowe\n";
             cout << WYSWIETL_KONTA << ". Wyswietl moje konta\n";
@@ -65,120 +69,85 @@ int main() {
             break;
         }
 
-        // ==========================================
-        // STREFA DLA NIEZALOGOWANEGO UŻYTKOWNIKA
-        // ==========================================
-        if (zalogowanyKlient == nullptr) {
-            switch (wybor) {
-            case REJESTRACJA: {
-                string im, naz, p, h;
-                cout << "Podaj imie: "; cin >> im;
-                cout << "Podaj nazwisko: "; cin >> naz;
-                cout << "Podaj PESEL: "; cin >> p;
+        try {
+            if (zalogowanyKlient == nullptr) {
+                switch (wybor) {
+                case REJESTRACJA: {
+                    string im, naz, p, h;
+                    cout << "Podaj imie: "; cin >> im;
+                    cout << "Podaj nazwisko: "; cin >> naz;
+                    cout << "Podaj PESEL: "; cin >> p;
+                    cout << "Podaj haslo: "; cin >> h;
 
-                if (p.length() != DLUGOSC_PESEL) {
-                    cout << "[BLAD] PESEL musi miec dokladnie " << DLUGOSC_PESEL << " znakow!\n";
+                    if (bank.zarejestrujKlienta(im, naz, p, h) != nullptr) {
+                        cout << "[SUKCES] Zlecono rejestracje profilu!\n";
+                    }
                     break;
                 }
+                case LOGOWANIE: {
+                    string p, h;
+                    cout << "Podaj PESEL: "; cin >> p;
+                    cout << "Podaj haslo: "; cin >> h;
 
-                cout << "Podaj haslo: "; cin >> h;
-
-                if (bank.zarejestrujKlienta(im, naz, p, h) != nullptr) {
-                    cout << "[SUKCES] Zlecono rejestracje profilu!\n";
-                }
-                break;
-            }
-            case LOGOWANIE: {
-                string p, h;
-                cout << "Podaj PESEL: "; cin >> p;
-                cout << "Podaj haslo: "; cin >> h;
-
-                zalogowanyKlient = bank.zaloguj(p, h);
-                if (zalogowanyKlient != nullptr) {
+                    zalogowanyKlient = bank.zaloguj(p, h);
                     cout << "[SUKCES] Zalogowano pomyslnie!\n";
+                    break;
                 }
-                else {
-                    cout << "[BLAD] Bledny PESEL lub haslo. Sprobuj ponownie.\n";
+                default:
+                    cout << "[BLAD] Wybierz poprawna opcje z menu.\n";
+                    break;
                 }
-                break;
             }
-            default:
-                cout << "[BLAD] Wybierz poprawna opcje z menu.\n";
-                break;
-            }
-        }
-        // ==========================================
-        // STREFA DLA ZALOGOWANEGO UŻYTKOWNIKA
-        // ==========================================
-        else {
-            switch (wybor) {
-            case OTWORZ_KONTO: {
-                int opcjaKonta;
-                cout << "Wybierz typ konta z listy:\n";
-                cout << "1. Konto Standardowe\n";
-                cout << "2. Konto Kredytowe\n";
-                cout << "Wybor: ";
+            else {
+                switch (wybor) {
+                case OTWORZ_KONTO: {
+                    int opcjaKonta;
+                    cout << "Wybierz typ konta z listy:\n";
+                    cout << "1. Konto Standardowe\n";
+                    cout << "2. Konto Kredytowe\n";
+                    cout << "Wybor: ";
 
-                if (!(cin >> opcjaKonta)) {
-                    wyczyscBufor();
-                    cout << "[BLAD] Niepoprawny format wyboru.\n";
+                    if (!(cin >> opcjaKonta)) {
+                        wyczyscBufor();
+                        throw invalid_argument("Oczekiwano cyfry 1 lub 2.");
+                    }
+
+                    if (opcjaKonta == 1) zalogowanyKlient->otworzKonto("Standardowe");
+                    else if (opcjaKonta == 2) zalogowanyKlient->otworzKonto("Kredytowe");
+                    else throw invalid_argument("Niepoprawny numer opcji.");
+
                     break;
                 }
-
-                if (opcjaKonta == 1) {
-                    zalogowanyKlient->otworzKonto("Standardowe");
-                }
-                else if (opcjaKonta == 2) {
-                    zalogowanyKlient->otworzKonto("Kredytowe");
-                }
-                else {
-                    cout << "[BLAD] Niepoprawny numer opcji.\n";
-                }
-                break;
-            }
-            case WYSWIETL_KONTA: {
-                zalogowanyKlient->wyswietlKonta();
-                break;
-            }
-            case WPLAC_SRODKI:
-            case WYPLAC_SRODKI:
-            case SPRAWDZ_SALDO: {
-                if (zalogowanyKlient->pobierzRachunek(0) == nullptr) {
-                    cout << "[UWAGA] Nie masz jeszcze konta! Uzyj opcji 'Otworz nowe konto bankowe'.\n";
+                case WYSWIETL_KONTA: {
+                    zalogowanyKlient->wyswietlKonta();
                     break;
                 }
+                case WPLAC_SRODKI:
+                case WYPLAC_SRODKI:
+                case SPRAWDZ_SALDO: {
+                    zalogowanyKlient->wyswietlKonta();
+                    cout << "Wybierz numer konta do operacji (indeks z listy): ";
+                    int wybranyIndeks;
 
-                zalogowanyKlient->wyswietlKonta();
-                cout << "Wybierz numer konta do operacji (indeks z listy): ";
-                int wybranyIndeks;
+                    if (!(cin >> wybranyIndeks) || wybranyIndeks < 1) {
+                        wyczyscBufor();
+                        throw invalid_argument("Nieprawidlowy format indeksu.");
+                    }
 
-                if (!(cin >> wybranyIndeks) || wybranyIndeks < 1) {
-                    wyczyscBufor();
-                    cout << "[BLAD] Nieprawidlowy numer indeksu!\n";
-                    break;
-                }
+                    Rachunek* konto = zalogowanyKlient->pobierzRachunek(wybranyIndeks - 1);
 
-                Rachunek* konto = zalogowanyKlient->pobierzRachunek(wybranyIndeks - 1);
-                if (konto == nullptr) {
-                    cout << "[BLAD] Nie znaleziono konta o podanym indeksie.\n";
-                    break;
-                }
+                    if (wybor == SPRAWDZ_SALDO) {
+                        cout << "[INFORMACJA] Aktualne saldo wynosi: " << konto->pobierzSaldo() << " PLN\n";
+                        break;
+                    }
 
-                if (wybor == SPRAWDZ_SALDO) {
-                    cout << "[INFORMACJA] Aktualne saldo Twojego konta wynosi: " << konto->pobierzSaldo() << " PLN\n";
-                    break;
-                }
+                    double kwota;
+                    cout << "Podaj kwote: ";
+                    if (!(cin >> kwota)) {
+                        wyczyscBufor();
+                        throw invalid_argument("Oczekiwano wartosci liczbowej dla kwoty.");
+                    }
 
-                double kwota;
-                cout << "Podaj kwote: ";
-
-                if (!(cin >> kwota) || kwota <= 0) {
-                    wyczyscBufor();
-                    cout << "[BLAD] Kwota transakcji musi byc wpisana poprawnie i byc wieksza od zera!\n";
-                    break;
-                }
-
-                try {
                     if (wybor == WPLAC_SRODKI) {
                         konto->wplac(kwota);
                         cout << "[SUKCES] Pomyslnie wplacono " << kwota << " PLN.\n";
@@ -187,21 +156,30 @@ int main() {
                         konto->wyplac(kwota);
                         cout << "[SUKCES] Pomyslnie wyplacono " << kwota << " PLN.\n";
                     }
+                    break;
                 }
-                catch (const exception& e) {
-                    cout << "[BLAD] Operacja odrzucona: " << e.what() << "\n";
+                case WYLOGUJ: {
+                    zalogowanyKlient = nullptr;
+                    cout << "[SUKCES] Wylogowano pomyslnie.\n";
+                    break;
                 }
-                break;
+                default:
+                    cout << "[BLAD] Wybierz poprawna opcje z menu.\n";
+                    break;
+                }
             }
-            case WYLOGUJ: {
-                zalogowanyKlient = nullptr;
-                cout << "[SUKCES] Wylogowano pomyslnie.\n";
-                break;
-            }
-            default:
-                cout << "[BLAD] Wybierz poprawna opcje z menu.\n";
-                break;
-            }
+        }
+        catch (const invalid_argument& e) {
+            cout << "\n[BLAD DANYCH] " << e.what() << "\n";
+        }
+        catch (const length_error& e) {
+            cout << "\n[LIMIT] " << e.what() << "\n";
+        }
+        catch (const out_of_range& e) {
+            cout << "\n[BLAD INDEKSU] " << e.what() << "\n";
+        }
+        catch (const exception& e) {
+            cout << "\n[NIEOCZEKIWANY BLAD] " << e.what() << "\n";
         }
     }
 

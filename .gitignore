@@ -4,3 +4,5 @@
 *.exe
 *.filters
 *.vcxproj
+*.exe
+*.pdb
