@@ -14,13 +14,13 @@ private:
 
 public:
     Transakcja(
-        const string& typOperacji,
+        string typOperacji,
         double kwota,
-        const string& data,
-        const string& idTransakcji
+        string data,
+        string idTransakcji
     );
 
-    string pobierzDaneTransakcji() const;
+    string pobierzDaneTransakcji();
 
     string getTypOperacji() const;
     double getKwota() const;

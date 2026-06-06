@@ -26,6 +26,4 @@ public:
 
     string getPesel() const;
     string getHaslo() const;
-    string getImie() const;
-    string getNazwisko() const;
 };
