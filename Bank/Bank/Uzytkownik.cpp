@@ -65,6 +65,11 @@ string Uzytkownik::getHaslo() const { return haslo; }
 string Uzytkownik::getImie() const { return imie; }
 string Uzytkownik::getNazwisko() const { return nazwisko; }
 
+const vector<unique_ptr<Rachunek>>& Uzytkownik::getKonta() const
+{
+    return mojeKonta;
+}
+
 ostream& operator<<(ostream& os, const Uzytkownik& u) {
     os << u.imie << " " << u.nazwisko << " (PESEL: " << u.pesel << ") | Konta: " << u.mojeKonta.size();
     return os;

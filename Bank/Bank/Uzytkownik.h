@@ -55,6 +55,8 @@ public:
     string getImie() const;
     string getNazwisko() const;
 
+    const vector<unique_ptr<Rachunek>>& getKonta() const;
+
     /**
      * @brief Przeciazenie operatora wypisywania strumieniowego.
      */
