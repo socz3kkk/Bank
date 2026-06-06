@@ -62,6 +62,8 @@ Rachunek* Uzytkownik::pobierzRachunek(int indeks) {
 
 string Uzytkownik::getPesel() const { return pesel; }
 string Uzytkownik::getHaslo() const { return haslo; }
+string Uzytkownik::getImie() const { return imie; }
+string Uzytkownik::getNazwisko() const { return nazwisko; }
 
 ostream& operator<<(ostream& os, const Uzytkownik& u) {
     os << u.imie << " " << u.nazwisko << " (PESEL: " << u.pesel << ") | Konta: " << u.mojeKonta.size();
