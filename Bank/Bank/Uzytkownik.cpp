@@ -34,3 +34,11 @@ string Uzytkownik::getPesel() const {
 string Uzytkownik::getHaslo() const {
     return haslo;
 }
+    string Uzytkownik::getImie() const {
+        return imie;
+    }
+
+    string Uzytkownik::getNazwisko() const {
+        return nazwisko;
+    }
+}

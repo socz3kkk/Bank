@@ -1,14 +1,10 @@
 #include "Transakcja.h"
 
-#include <string>
-
-using namespace std;
-
 Transakcja::Transakcja(
-    string typOperacji,
+    const string& typOperacji,
     double kwota,
-    string data,
-    string idTransakcji)
+    const string& data,
+    const string& idTransakcji)
 {
     this->typOperacji = typOperacji;
     this->kwota = kwota;
@@ -16,12 +12,12 @@ Transakcja::Transakcja(
     this->idTransakcji = idTransakcji;
 }
 
-string Transakcja::pobierzDaneTransakcji()
+string Transakcja::pobierzDaneTransakcji() const
 {
     return "ID: " + idTransakcji +
-        ", Typ: " + typOperacji +
-        ", Kwota: " + to_string(kwota) +
-        ", Data: " + data;
+        " | Typ: " + typOperacji +
+        " | Kwota: " + to_string(kwota) +
+        " | Data: " + data;
 }
 
 string Transakcja::getTypOperacji() const
