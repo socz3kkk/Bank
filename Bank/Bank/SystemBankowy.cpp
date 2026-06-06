@@ -1,79 +1,41 @@
-#include <fstream>
-#include <iomanip>
-#include "json.hpp"
-using json = nlohmann::json;
 #include "SystemBankowy.h"
-#include "Uzytkownik.h" 
 #include <iostream>
+#include <stdexcept>
 
-using namespace std;
+constexpr size_t WYMAGANA_DLUGOSC_PESEL = 11;
 
-
-SystemBankowy::SystemBankowy(string nazwa) {
-    nazwaBanku = nazwa;
+SystemBankowy::SystemBankowy(const string& nazwa) : nazwaBanku(nazwa) {
     cout << "[SystemBankowy] Uruchomiono system dla banku: " << nazwaBanku << endl;
 }
 
 SystemBankowy::~SystemBankowy() {
-    cout << "[SystemBankowy] Zamykanie systemu bankowego i czyszczenie pamieci..." << endl;
+    bazaKlientow.clear();
 }
 
-Rachunek* SystemBankowy::szukajRachunku(string numerKonta) {
-    cout << "[SystemBankowy] Przeszukuje baze w poszukiwaniu konta nr: " << numerKonta << endl;
-    return nullptr;
-}
-
-Uzytkownik* SystemBankowy::zaloguj(string pesel, string haslo) {
-    cout << "[SystemBankowy] Rozpoczeto probe logowania dla PESEL: " << pesel << endl;
-    return nullptr;
-}
-
-Uzytkownik* SystemBankowy::zarejestrujKlienta(string imie, string nazwisko, string pesel, string haslo) {
-    cout << "[SystemBankowy] Przyjeto wniosek o rejestracje nowego klienta: " << imie << " " << nazwisko << endl;
-    return nullptr;
-    void SystemBankowy::zapiszDoPliku()
-{
-    json j;
-
-    for (const auto& rachunek : rachunki)
-    {
-        j.push_back({
-            {"id", rachunek.getId()},
-            {"owner", rachunek.getWlasciciel()},
-            {"balance", rachunek.getSaldo()}
-        });
+Uzytkownik* SystemBankowy::zaloguj(const string& pesel, const string& haslo) const {
+    if (pesel.empty() || haslo.empty()) {
+        throw invalid_argument("Dane logowania nie moga byc puste!");
     }
 
-    std::ofstream file("accounts.json");
+    for (const auto& u : bazaKlientow) {
+        if (u->getPesel() == pesel && u->getHaslo() == haslo) {
+            return u.get();
+        }
+    }
+    throw invalid_argument("Bledny PESEL lub haslo.");
+}
 
-    file << std::setw(4) << j;
-
-    file.close();
-    void SystemBankowy::wczytajZPliku()
-{
-    std::ifstream file("accounts.json");
-
-    if (!file.is_open())
-        return;
-
-    json j;
-
-    file >> j;
-
-    rachunki.clear();
-
-    for (const auto& item : j)
-    {
-        int id = item["id"];
-        std::string owner = item["owner"];
-        double balance = item["balance"];
-
-        Rachunek r(id, owner, balance);
-
-        rachunki.push_back(r);
+Uzytkownik* SystemBankowy::zarejestrujKlienta(const string& imie, const string& nazwisko, const string& pesel, const string& haslo) {
+    if (pesel.length() != WYMAGANA_DLUGOSC_PESEL) {
+        throw invalid_argument("PESEL musi miec dokladnie " + to_string(WYMAGANA_DLUGOSC_PESEL) + " znakow.");
     }
 
-    file.close();
-}
-}
+    for (const auto& u : bazaKlientow) {
+        if (u->getPesel() == pesel) {
+            throw invalid_argument("Uzytkownik o podanym numerze PESEL juz istnieje w bazie.");
+        }
+    }
+
+    bazaKlientow.push_back(make_unique<Uzytkownik>(imie, nazwisko, pesel, haslo));
+    return bazaKlientow.back().get();
 }
