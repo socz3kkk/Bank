@@ -1,6 +1,7 @@
 #pragma once
 #include "Rachunek.h"
 #include <string>
+#include <iostream>
 
 class KontoWalutowe : public Rachunek {
 private:
@@ -13,9 +14,11 @@ public:
 
     void wyswietlInformacje() const override;
     void wykonajOperacjeOkresowa() override;
-    void wyplac(const double kwota) override; 
+    void wyplac(const double kwota) override;
 
     bool wplacWalute(double kwota);
     bool wyplacWalute(double kwota);
     double wymienNaPln(double kwotaWaluty);
+
+    friend std::ostream& operator<<(std::ostream& os, const KontoWalutowe& konto);
 };

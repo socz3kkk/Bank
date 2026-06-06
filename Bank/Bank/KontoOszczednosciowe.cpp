@@ -1,11 +1,14 @@
 #include "KontoOszczednosciowe.h"
 #include <iostream>
-#include <stdexcept> // Do obsługi wyjątków zgodnie ze stylem klasy Kredytowy
+#include <stdexcept>
 
 using namespace std;
 
 KontoOszczednosciowe::KontoOszczednosciowe(string numerRachunku, double poczatkoweSaldo, double oprocentowanie)
     : Rachunek(numerRachunku, poczatkoweSaldo), oprocentowanie(oprocentowanie), liczbaWyplat(0) {
+    if (oprocentowanie < 0) {
+        throw std::invalid_argument("Oprocentowanie nie moze byc ujemne.");
+    }
 }
 
 void KontoOszczednosciowe::wykonajOperacjeOkresowa() {
@@ -27,7 +30,7 @@ void KontoOszczednosciowe::wyplac(const double kwota) {
     }
 
     if (saldo < calkowityKoszt) {
-        throw std::invalid_argument("Brak wystarczajacych srodkow na koncie oszczednosciowym (uwzgledniajac prowizje).");
+        throw std::runtime_error("Brak wystarczajacych srodkow na koncie oszczednosciowym (uwzgledniajac prowizje " + to_string(OPLATA_ZA_WYPLATE) + " PLN).");
     }
 
     saldo -= calkowityKoszt;
@@ -35,9 +38,14 @@ void KontoOszczednosciowe::wyplac(const double kwota) {
 }
 
 void KontoOszczednosciowe::wyswietlInformacje() const {
-    cout << "--- Konto Oszczednosciowe ---\n";
-    cout << "Numer: " << numerRachunku << "\n";
-    cout << "Saldo: " << saldo << " PLN\n";
-    cout << "Oprocentowanie: " << oprocentowanie << "%\n";
-    cout << "Wykonane wyplaty: " << liczbaWyplat << "\n";
+    cout << *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const KontoOszczednosciowe& konto) {
+    os << "--- Konto Oszczednosciowe ---\n"
+        << "Numer: " << konto.numerRachunku << "\n"
+        << "Saldo: " << konto.saldo << " PLN\n"
+        << "Oprocentowanie: " << konto.oprocentowanie << "%\n"
+        << "Wykonane wyplaty: " << konto.liczbaWyplat << "\n";
+    return os;
 }

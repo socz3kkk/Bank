@@ -6,6 +6,12 @@ using namespace std;
 
 KontoWalutowe::KontoWalutowe(string numerRachunku, double poczatkoweSaldo, string waluta, double kursWymiany)
     : Rachunek(numerRachunku, poczatkoweSaldo), waluta(waluta), kursWymiany(kursWymiany) {
+    if (kursWymiany <= 0.0) {
+        throw std::invalid_argument("Kurs wymiany musi byc wiekszy od zera.");
+    }
+    if (waluta.empty()) {
+        throw std::invalid_argument("Nazwa waluty nie moze byc pusta.");
+    }
 }
 
 void KontoWalutowe::wykonajOperacjeOkresowa() {
@@ -13,8 +19,11 @@ void KontoWalutowe::wykonajOperacjeOkresowa() {
 }
 
 void KontoWalutowe::wyplac(const double kwota) {
+    if (kwota <= 0.0) {
+        throw std::invalid_argument("Kwota wyplaty musi byc dodatnia.");
+    }
     if (!wyplacWalute(kwota)) {
-        throw std::invalid_argument("Blad wyplaty: niepoprawna kwota lub brak srodkow w walucie " + waluta);
+        throw std::runtime_error("Blad wyplaty: brak wystarczajacych srodkow w walucie " + waluta);
     }
 }
 
@@ -33,10 +42,11 @@ bool KontoWalutowe::wyplacWalute(double kwota) {
 }
 
 double KontoWalutowe::wymienNaPln(double kwotaWaluty) {
-    if (kwotaWaluty <= 0.0) return 0.0;
+    if (kwotaWaluty <= 0.0) {
+        throw std::invalid_argument("Kwota do przewalutowania musi byc dodatnia.");
+    }
     if (saldo < kwotaWaluty) {
-        cout << "Blad: Niewystarczajaco srodkow do przewalutowania.\n";
-        return 0.0;
+        throw std::runtime_error("Niewystarczajaco srodkow do przewalutowania.");
     }
 
     saldo -= kwotaWaluty;
@@ -47,8 +57,13 @@ double KontoWalutowe::wymienNaPln(double kwotaWaluty) {
 }
 
 void KontoWalutowe::wyswietlInformacje() const {
-    cout << "--- Konto Walutowe ---\n";
-    cout << "Numer: " << numerRachunku << "\n";
-    cout << "Saldo: " << saldo << " " << waluta << "\n";
-    cout << "Obecny kurs wymiany (do PLN): " << kursWymiany << "\n";
+    cout << *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const KontoWalutowe& konto) {
+    os << "--- Konto Walutowe ---\n"
+        << "Numer: " << konto.numerRachunku << "\n"
+        << "Saldo: " << konto.saldo << " " << konto.waluta << "\n"
+        << "Obecny kurs wymiany (do PLN): " << konto.kursWymiany << "\n";
+    return os;
 }
