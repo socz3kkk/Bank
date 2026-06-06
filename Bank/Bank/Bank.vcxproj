@@ -128,13 +128,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bank.cpp" />
-    <ClCompile Include="Kredytowy.cpp" />
+    <ClCompile Include="KontoOszczednosciowe.cpp" />
+    <ClCompile Include="KontoWalutowe.cpp" />
     <ClCompile Include="Rachunek.cpp" />
     <ClCompile Include="SystemBankowy.cpp" />
     <ClCompile Include="Uzytkownik.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Kredytowy.h" />
+    <ClInclude Include="KontoOszczednosciowe.h" />
+    <ClInclude Include="KontoWalutowe.h" />
     <ClInclude Include="Rachunek.h" />
     <ClInclude Include="SystemBankowy.h" />
     <ClInclude Include="Uzytkownik.h" />
