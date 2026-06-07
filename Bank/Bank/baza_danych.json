@@ -1,0 +1,11 @@
+{
+    "uzytkownicy": [
+        {
+            "haslo": "123",
+            "imie": "adam",
+            "konta": [],
+            "nazwisko": "das",
+            "pesel": "12312312312"
+        }
+    ]
+}

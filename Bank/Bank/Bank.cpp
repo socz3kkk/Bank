@@ -11,9 +11,6 @@
 
 using namespace std;
 
-// ==========================================
-// FUNKCJE POMOCNICZE UI
-// ==========================================
 void wyczyscBufor() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -31,9 +28,6 @@ void rysujNaglowek(const string& tytul) {
     cout << "============================================\n";
 }
 
-// ==========================================
-// PODMENU 1: ZARZADZANIE KONTAMI
-// ==========================================
 void menuZarzadzaniaKontami(Uzytkownik* zalogowany) {
     int wybor = -1;
     while (wybor != 0) {
@@ -72,7 +66,6 @@ void menuZarzadzaniaKontami(Uzytkownik* zalogowany) {
                     wyczyscBufor();
                     throw invalid_argument("Nieprawidlowy format indeksu.");
                 }
-                // Przekazujemy indeks uzytkownika pomniejszony o 1 (bo program liczy od 0)
                 zalogowany->zamknijKonto(indeks - 1);
                 poczekajNaEnter();
                 break;
@@ -88,9 +81,6 @@ void menuZarzadzaniaKontami(Uzytkownik* zalogowany) {
     }
 }
 
-// ==========================================
-// PODMENU 2: OPERACJE FINANSOWE (PLN)
-// ==========================================
 void menuOperacjiKrajowych(Uzytkownik* zalogowany) {
     int wybor = -1;
     while (wybor != 0) {
@@ -113,11 +103,10 @@ void menuOperacjiKrajowych(Uzytkownik* zalogowany) {
 
             Rachunek* konto = zalogowany->pobierzRachunek(indeks - 1);
 
-            // ZABEZPIECZENIE: Odrzucamy operacje, jesli konto to KontoWalutowe
             if (dynamic_cast<KontoWalutowe*>(konto) != nullptr) {
                 cout << "[BLAD] Wybrano Konto Walutowe! Do zarzadzania nim posluzy Ci modul 'Operacje walutowe'.\n";
                 poczekajNaEnter();
-                continue; // Przerywamy dalsze wykonywanie operacji i wracamy do menu wyboru
+                continue;
             }
 
             if (wybor == 1) {
@@ -151,9 +140,6 @@ void menuOperacjiKrajowych(Uzytkownik* zalogowany) {
     }
 }
 
-// ==========================================
-// PODMENU 3: OPERACJE WALUTOWE
-// ==========================================
 void menuOperacjiWalutowych(Uzytkownik* zalogowany) {
     int wybor = -1;
     while (wybor != 0) {
@@ -214,9 +200,6 @@ void menuOperacjiWalutowych(Uzytkownik* zalogowany) {
     }
 }
 
-// ==========================================
-// PODMENU 4: OPERACJE OKRESOWE
-// ==========================================
 void menuOperacjiOkresowych(Uzytkownik* zalogowany) {
     rysujNaglowek("MODUL: OPERACJE OKRESOWE");
     try {
@@ -232,7 +215,7 @@ void menuOperacjiOkresowych(Uzytkownik* zalogowany) {
 
         if (kontoOszcz != nullptr) {
             kontoOszcz->wykonajOperacjeOkresowa();
-            cout << "[SUKCES] Naleznosci okresowe (np. odsetki) dla Konta Oszczednosciowego zostaly naliczone.\n";
+            cout << "[SUKCES] Naleznosci okresowe dla Konta Oszczednosciowego zostaly naliczone.\n";
         }
         else if (kontoWalut != nullptr) {
             kontoWalut->wykonajOperacjeOkresowa();
@@ -249,9 +232,6 @@ void menuOperacjiOkresowych(Uzytkownik* zalogowany) {
     }
 }
 
-// ==========================================
-// PĘTLA GŁÓWNA PROGRAMU
-// ==========================================
 int main() {
     SystemBankowy bank("Narodowy Bank Obywatelski");
     Uzytkownik* zalogowanyKlient = nullptr;

@@ -79,6 +79,12 @@ string Uzytkownik::getNazwisko() const { return nazwisko; }
 
 const vector<unique_ptr<Rachunek>>& Uzytkownik::getKonta() const { return mojeKonta; }
 
+void Uzytkownik::dodajWczytaneKonto(unique_ptr<Rachunek> konto) {
+    if (konto != nullptr) {
+        mojeKonta.push_back(move(konto));
+    }
+}
+
 ostream& operator<<(ostream& os, const Uzytkownik& u) {
     os << u.imie << " " << u.nazwisko << " (PESEL: " << u.pesel << ") | Konta: " << u.mojeKonta.size();
     return os;
