@@ -16,7 +16,7 @@ void KontoOszczednosciowe::wykonajOperacjeOkresowa() {
 
     double odsetki = saldo * (oprocentowanie / 100.0);
     saldo += odsetki;
-    cout << "[Konto Oszczednosciowe " << numer_rachunku << "] Automatycznie naliczono odsetki: " << odsetki << " PLN.\n";
+    cout << "[Konto Oszczednosciowe " << numerRachunku << "] Automatycznie naliczono odsetki: " << odsetki << " PLN.\n";
 }
 
 void KontoOszczednosciowe::wyplac(const double kwota) {
@@ -43,7 +43,7 @@ void KontoOszczednosciowe::wyswietlInformacje() const {
 
 std::ostream& operator<<(std::ostream& os, const KontoOszczednosciowe& konto) {
     os << "--- Konto Oszczednosciowe ---\n"
-        << "Numer: " << konto.numer_rachunku << "\n"
+        << "Numer: " << konto.numerRachunku << "\n"
         << "Saldo: " << konto.saldo << " PLN\n"
         << "Oprocentowanie: " << konto.oprocentowanie << "%\n"
         << "Wykonane wyplaty: " << konto.liczbaWyplat << "\n";

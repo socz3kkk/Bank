@@ -15,7 +15,7 @@ KontoWalutowe::KontoWalutowe(string numerRachunku, double poczatkoweSaldo, strin
 }
 
 void KontoWalutowe::wykonajOperacjeOkresowa() {
-    cout << "[Konto Walutowe " << numer_rachunku << "] Zweryfikowano stabilnosc waluty " << waluta << ". Kurs: " << kursWymiany << " PLN.\n";
+    cout << "[Konto Walutowe " << numerRachunku << "] Zweryfikowano stabilnosc waluty " << waluta << ". Kurs: " << kursWymiany << " PLN.\n";
 }
 
 void KontoWalutowe::wyplac(const double kwota) {
@@ -62,7 +62,7 @@ void KontoWalutowe::wyswietlInformacje() const {
 
 std::ostream& operator<<(std::ostream& os, const KontoWalutowe& konto) {
     os << "--- Konto Walutowe ---\n"
-        << "Numer: " << konto.numer_rachunku << "\n"
+        << "Numer: " << konto.numerRachunku << "\n"
         << "Saldo: " << konto.saldo << " " << konto.waluta << "\n"
         << "Obecny kurs wymiany (do PLN): " << konto.kursWymiany << "\n";
     return os;
