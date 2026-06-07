@@ -3,7 +3,6 @@
 #include <vector>
 #include <iostream>
 #include "Transakcja.h"
-
 using namespace std;
 
 class Rachunek {
