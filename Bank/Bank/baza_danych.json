@@ -2,9 +2,46 @@
     "uzytkownicy": [
         {
             "haslo": "123",
-            "imie": "adam",
-            "konta": [],
-            "nazwisko": "das",
+            "imie": "Marek",
+            "konta": [
+                {
+                    "historia": [
+                        {
+                            "data": "2026-6-7",
+                            "id": "TX-1000",
+                            "kwota": 5000.0,
+                            "typ": "Wplata Srodkow"
+                        },
+                        {
+                            "data": "2026-6-7",
+                            "id": "TX-1001",
+                            "kwota": 200.0,
+                            "typ": "Wyplata Srodkow"
+                        },
+                        {
+                            "data": "2026-6-7",
+                            "id": "TX-1000",
+                            "kwota": 22.0,
+                            "typ": "Wplata Srodkow"
+                        }
+                    ],
+                    "liczbaWyplat": 0,
+                    "numer": "PL153659",
+                    "oprocentowanie": 5.0,
+                    "saldo": 5062.0,
+                    "typ": "Oszczednosciowe",
+                    "waluta": "PLN"
+                },
+                {
+                    "historia": [],
+                    "kurs": 4.3,
+                    "numer": "PL497826",
+                    "saldo": 4600.0,
+                    "typ": "Walutowe",
+                    "waluta": "EUR"
+                }
+            ],
+            "nazwisko": "Las",
             "pesel": "12312312312"
         }
     ]

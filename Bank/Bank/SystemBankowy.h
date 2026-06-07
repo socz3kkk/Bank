@@ -42,4 +42,7 @@ public:
     Uzytkownik* zarejestrujKlienta(const string& imie, const string& nazwisko, const string& pesel, const string& haslo);
 
     void zapiszStanSystemu();
+
+    // Szuka konta o podanym numerze w calej bazie
+    Rachunek* znajdzRachunek(const string& numerKonta) const;
 };

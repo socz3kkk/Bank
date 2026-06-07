@@ -47,3 +47,14 @@ Uzytkownik* SystemBankowy::zarejestrujKlienta(const string& imie, const string& 
     zapiszStanSystemu();
     return bazaKlientow.back().get();
 }
+
+Rachunek* SystemBankowy::znajdzRachunek(const string& numerKonta) const {
+    for (const auto& uzytkownik : bazaKlientow) {
+        for (const auto& konto : uzytkownik->getKonta()) {
+            if (konto->pobierzNumer() == numerKonta) {
+                return konto.get();
+            }
+        }
+    }
+    return nullptr;
+}

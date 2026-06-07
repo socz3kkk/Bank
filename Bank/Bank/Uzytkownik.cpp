@@ -5,8 +5,17 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <random>
 
 using namespace std;
+
+string generujLosowyNumerKonta() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> zakres(100000, 999999);
+
+    return "PL" + to_string(zakres(gen));
+}
 
 Uzytkownik::Uzytkownik(const string& imie, const string& nazwisko, const string& pesel, const string& haslo)
     : imie(imie), nazwisko(nazwisko), pesel(pesel), haslo(haslo) {
@@ -22,19 +31,19 @@ void Uzytkownik::otworzKonto(const string& typKonta) {
         throw length_error("Odmowa! Osiagnieto maksymalny limit kont dla tego profilu.");
     }
 
-    string przykladowyNumer = "PL123456789_" + to_string(mojeKonta.size() + 1);
+    string unikalnyNumer = generujLosowyNumerKonta();
 
     if (typKonta == "Oszczednosciowe") {
-        mojeKonta.push_back(make_unique<KontoOszczednosciowe>(przykladowyNumer, 0.0, 5.0));
+        mojeKonta.push_back(make_unique<KontoOszczednosciowe>(unikalnyNumer, 0.0, 5.0));
     }
     else if (typKonta == "Walutowe") {
-        mojeKonta.push_back(make_unique<KontoWalutowe>(przykladowyNumer, 0.0, "EUR", 4.30));
+        mojeKonta.push_back(make_unique<KontoWalutowe>(unikalnyNumer, 0.0, "EUR", 4.30));
     }
     else {
         throw invalid_argument("Nieznany typ konta!");
     }
 
-    cout << "[SUKCES] Otworzono nowe konto typu: " << typKonta << " (" << przykladowyNumer << ")\n";
+    cout << "[SUKCES] Otworzono nowe konto typu: " << typKonta << " (" << unikalnyNumer << ")\n";
 }
 
 void Uzytkownik::wyswietlKonta() const {

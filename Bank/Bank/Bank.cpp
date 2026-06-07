@@ -36,6 +36,7 @@ void menuZarzadzaniaKontami(Uzytkownik* zalogowany) {
         cout << "2. Otworz nowe Konto Oszczednosciowe\n";
         cout << "3. Otworz nowe Konto Walutowe\n";
         cout << "4. Zamknij istniejace konto\n";
+        cout << "5. Wyswietl historie transakcji konta\n";
         cout << "0. Powrot do Menu Glownego\n";
         cout << "--------------------------------------------\n";
         cout << "Twoj wybor: ";
@@ -70,6 +71,33 @@ void menuZarzadzaniaKontami(Uzytkownik* zalogowany) {
                 poczekajNaEnter();
                 break;
             }
+            case 5: {
+                cout << "\n--- HISTORIA TRANSAKCJI ---\n";
+                zalogowany->wyswietlKonta();
+                cout << "\nWybierz numer konta do sprawdzenia historii (indeks z listy): ";
+                int indeks;
+                if (!(cin >> indeks) || indeks < 1) {
+                    wyczyscBufor();
+                    throw invalid_argument("Nieprawidlowy format indeksu.");
+                }
+
+                Rachunek* konto = zalogowany->pobierzRachunek(indeks - 1);
+                const auto& historia = konto->pobierzHistorie();
+
+                if (historia.empty()) {
+                    cout << "[INFORMACJA] Brak historii transakcji dla tego konta.\n";
+                }
+                else {
+                    cout << "\nHistoria dla konta " << konto->pobierzNumer() << ":\n";
+                    cout << "--------------------------------------------\n";
+                    for (const auto& tx : historia) {
+                        cout << tx << "\n";
+                    }
+                    cout << "--------------------------------------------\n";
+                }
+                poczekajNaEnter();
+                break;
+            }
             case 0: break;
             default: cout << "[BLAD] Niepoprawna opcja.\n";
             }
@@ -81,13 +109,14 @@ void menuZarzadzaniaKontami(Uzytkownik* zalogowany) {
     }
 }
 
-void menuOperacjiKrajowych(Uzytkownik* zalogowany) {
+void menuOperacjiKrajowych(Uzytkownik* zalogowany, SystemBankowy& bank) {
     int wybor = -1;
     while (wybor != 0) {
         rysujNaglowek("MODUL: OPERACJE KRAJOWE (PLN)");
         cout << "1. Sprawdz saldo konta PLN\n";
         cout << "2. Wplac srodki (PLN)\n";
         cout << "3. Wyplac srodki (PLN)\n";
+        cout << "4. Wykonaj przelew na inne konto\n";
         cout << "0. Powrot do Menu Glownego\n";
         cout << "--------------------------------------------\n";
         cout << "Twoj wybor: ";
@@ -96,21 +125,70 @@ void menuOperacjiKrajowych(Uzytkownik* zalogowany) {
         if (wybor == 0) break;
 
         try {
-            zalogowany->wyswietlKonta();
-            cout << "\nWybierz numer konta do operacji (indeks z listy): ";
+            cout << "\n--- TWOJE KONTA KRAJOWE (PLN) ---\n";
+            const auto& konta = zalogowany->getKonta();
+            bool maKontaPLN = false;
+
+            for (size_t i = 0; i < konta.size(); ++i) {
+                if (dynamic_cast<KontoWalutowe*>(konta[i].get()) == nullptr) {
+                    cout << i + 1 << ". ";
+                    konta[i]->wyswietlSzczegoly();
+                    cout << "\n";
+                    maKontaPLN = true;
+                }
+            }
+
+            if (!maKontaPLN) {
+                cout << "[INFORMACJA] Nie posiadasz zadnych kont w PLN do operacji krajowych.\n";
+                poczekajNaEnter();
+                continue;
+            }
+            // ------------------------------------------------
+
+            cout << "\nWybierz numer konta ZRODLOWEGO do operacji (indeks z listy): ";
             int indeks;
             if (!(cin >> indeks) || indeks < 1) { wyczyscBufor(); throw invalid_argument("Nieprawidlowy format indeksu."); }
 
-            Rachunek* konto = zalogowany->pobierzRachunek(indeks - 1);
+            Rachunek* kontoZrodlowe = zalogowany->pobierzRachunek(indeks - 1);
 
-            if (dynamic_cast<KontoWalutowe*>(konto) != nullptr) {
-                cout << "[BLAD] Wybrano Konto Walutowe! Do zarzadzania nim posluzy Ci modul 'Operacje walutowe'.\n";
+            if (dynamic_cast<KontoWalutowe*>(kontoZrodlowe) != nullptr) {
+                cout << "[BLAD] Wybrano Konto Walutowe! Operacje krajowe obsluguja tylko konta PLN.\n";
                 poczekajNaEnter();
                 continue;
             }
 
             if (wybor == 1) {
-                cout << "[INFORMACJA] Aktualne saldo wynosi: " << konto->pobierzSaldo() << " PLN\n";
+                cout << "[INFORMACJA] Aktualne saldo wynosi: " << kontoZrodlowe->pobierzSaldo() << " PLN\n";
+                poczekajNaEnter();
+                continue;
+            }
+
+            if (wybor == 4) {
+                cout << "Podaj DOCELOWY numer konta (np. PL123456): ";
+                string numerDocelowy;
+                cin >> numerDocelowy;
+
+                Rachunek* kontoDocelowe = bank.znajdzRachunek(numerDocelowy);
+
+                if (kontoDocelowe == nullptr) {
+                    throw invalid_argument("Nie znaleziono konta o podanym numerze w systemie!");
+                }
+
+                if (dynamic_cast<KontoWalutowe*>(kontoDocelowe) != nullptr) {
+                    throw invalid_argument("Odmowa transakcji! Konto docelowe jest w walucie obcej. Przelewy obslugowane sa tylko dla kont PLN.");
+                }
+
+                double kwota;
+                cout << "Podaj kwote przelewu: ";
+                if (!(cin >> kwota)) { wyczyscBufor(); throw invalid_argument("Oczekiwano wartosci liczbowej."); }
+
+                if (kontoZrodlowe->wykonajPrzelew(kontoDocelowe, kwota)) {
+                    cout << "[SUKCES] Przelew " << kwota << " PLN do " << numerDocelowy << " zrealizowany.\n";
+                    bank.zapiszStanSystemu();
+                }
+                else {
+                    cout << "[BLAD] Operacja odrzucona (brak srodkow lub wybrano to samo konto).\n";
+                }
                 poczekajNaEnter();
                 continue;
             }
@@ -120,11 +198,11 @@ void menuOperacjiKrajowych(Uzytkownik* zalogowany) {
             if (!(cin >> kwota)) { wyczyscBufor(); throw invalid_argument("Oczekiwano wartosci liczbowej."); }
 
             if (wybor == 2) {
-                konto->wplac(kwota);
+                kontoZrodlowe->wplac(kwota);
                 cout << "[SUKCES] Pomyslnie wplacono " << kwota << " PLN na konto.\n";
             }
             else if (wybor == 3) {
-                if (konto->wyplac(kwota)) {
+                if (kontoZrodlowe->wyplac(kwota)) {
                     cout << "[SUKCES] Pomyslnie wyplacono " << kwota << " PLN.\n";
                 }
                 else {
@@ -144,9 +222,10 @@ void menuOperacjiWalutowych(Uzytkownik* zalogowany) {
     int wybor = -1;
     while (wybor != 0) {
         rysujNaglowek("MODUL: OPERACJE WALUTOWE");
-        cout << "1. Wplac walute obca\n";
-        cout << "2. Wyplac walute obca\n";
-        cout << "3. Symulator wymiany walut (Przelicz na PLN)\n";
+        cout << "1. Sprawdz saldo konta walutowego\n";
+        cout << "2. Wplac walute obca\n";
+        cout << "3. Wyplac walute obca\n";
+        cout << "4. Symulator wymiany walut (Przelicz na PLN)\n";
         cout << "0. Powrot do Menu Glownego\n";
         cout << "--------------------------------------------\n";
         cout << "Twoj wybor: ";
@@ -155,7 +234,26 @@ void menuOperacjiWalutowych(Uzytkownik* zalogowany) {
         if (wybor == 0) break;
 
         try {
-            zalogowany->wyswietlKonta();
+            cout << "\n--- TWOJE KONTA WALUTOWE ---\n";
+            const auto& konta = zalogowany->getKonta();
+            bool maKontaWalutowe = false;
+
+            for (size_t i = 0; i < konta.size(); ++i) {
+                if (dynamic_cast<KontoWalutowe*>(konta[i].get()) != nullptr) {
+                    cout << i + 1 << ". ";
+                    konta[i]->wyswietlSzczegoly();
+                    cout << "\n";
+                    maKontaWalutowe = true;
+                }
+            }
+
+            if (!maKontaWalutowe) {
+                cout << "[INFORMACJA] Nie posiadasz zadnych kont walutowych.\n";
+                poczekajNaEnter();
+                continue;
+            }
+            // ------------------------------------------------------
+
             cout << "\nWybierz numer konta WALUTOWEGO (indeks z listy): ";
             int indeks;
             if (!(cin >> indeks) || indeks < 1) { wyczyscBufor(); throw invalid_argument("Nieprawidlowy format indeksu."); }
@@ -167,24 +265,31 @@ void menuOperacjiWalutowych(Uzytkownik* zalogowany) {
                 throw invalid_argument("Wybrane konto NIE JEST kontem walutowym!");
             }
 
+            if (wybor == 1) {
+                cout << "[INFORMACJA] Aktualne saldo wynosi: " << kontoWal->pobierzSaldo()
+                    << " " << kontoWal->pobierzWalute() << "\n";
+                poczekajNaEnter();
+                continue;
+            }
+
             double kwota;
             cout << "Podaj kwote w walucie obcej: ";
             if (!(cin >> kwota)) { wyczyscBufor(); throw invalid_argument("Oczekiwano wartosci liczbowej."); }
 
             switch (wybor) {
-            case 1:
+            case 2:
                 kontoWal->wplacWalute(kwota);
                 cout << "[SUKCES] Zaksiegowano wplate w walucie konta.\n";
                 break;
-            case 2:
+            case 3:
                 if (kontoWal->wyplacWalute(kwota)) {
                     cout << "[SUKCES] Pomyslnie wyplacono " << kwota << " w walucie konta.\n";
                 }
                 else {
-                    cout << "[BLAD] Operacja odrzucona.\n";
+                    cout << "[BLAD] Operacja odrzucona (brak srodkow).\n";
                 }
                 break;
-            case 3:
+            case 4:
                 cout << "[KURS WYMIANY] Kwota " << kwota << " w Twojej walucie obcej, "
                     << "po przewalutowaniu daje: " << kontoWal->wymienNaPln(kwota) << " PLN.\n";
                 break;
@@ -281,7 +386,7 @@ int main() {
             cout << "Witaj, " << zalogowanyKlient->getImie() << " " << zalogowanyKlient->getNazwisko() << "!\n";
             cout << "--------------------------------------------\n";
             cout << "1. Zarzadzanie kontami     (Otwieranie, Zamykanie, Podglad)\n";
-            cout << "2. Operacje krajowe PLN    (Wplaty, Wyplaty, Saldo)\n";
+            cout << "2. Operacje krajowe PLN    (Wplaty, Wyplaty, Przelew)\n";
             cout << "3. Operacje walutowe       (Wplaty, Wyplaty, Kantorek)\n";
             cout << "4. Operacje okresowe       (Zamykanie miesiaca, Odsetki)\n";
             cout << "9. Wyloguj uzytkownika\n";
@@ -293,7 +398,7 @@ int main() {
 
             switch (wybor) {
             case 1: menuZarzadzaniaKontami(zalogowanyKlient); break;
-            case 2: menuOperacjiKrajowych(zalogowanyKlient); break;
+            case 2: menuOperacjiKrajowych(zalogowanyKlient, bank); break;
             case 3: menuOperacjiWalutowych(zalogowanyKlient); break;
             case 4: menuOperacjiOkresowych(zalogowanyKlient); break;
             case 9:
