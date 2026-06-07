@@ -24,10 +24,7 @@ void Uzytkownik::otworzKonto(const string& typKonta) {
 
     string przykladowyNumer = "PL123456789_" + to_string(mojeKonta.size() + 1);
 
-    if (typKonta == "Standardowe") {
-        mojeKonta.push_back(make_unique<Rachunek>(przykladowyNumer, 0.0));
-    }
-    else if (typKonta == "Oszczednosciowe") {
+    if (typKonta == "Oszczednosciowe") {
         mojeKonta.push_back(make_unique<KontoOszczednosciowe>(przykladowyNumer, 0.0, 5.0));
     }
     else if (typKonta == "Walutowe") {
@@ -48,13 +45,21 @@ void Uzytkownik::wyswietlKonta() const {
 
     for (size_t i = 0; i < mojeKonta.size(); i++) {
         cout << i + 1 << ". ";
-        mojeKonta[i]->wyswietlInformacje();
+        mojeKonta[i]->wyswietlSzczegoly();
         cout << "\n";
     }
 }
 
-void Uzytkownik::zamknijKonto(const string& numerKonta) {
-    cout << "Zamykanie konta " << numerKonta << "...\n";
+void Uzytkownik::zamknijKonto(int indeks) {
+    if (mojeKonta.empty()) {
+        throw out_of_range("Brak otwartych kont do zamkniecia!");
+    }
+    if (indeks < 0 || indeks >= mojeKonta.size()) {
+        throw out_of_range("Nieprawidlowy indeks konta.");
+    }
+
+    mojeKonta.erase(mojeKonta.begin() + indeks);
+    cout << "[SUKCES] Konto zostalo pomyslnie zamkniete i usuniete z systemu.\n";
 }
 
 Rachunek* Uzytkownik::pobierzRachunek(int indeks) {
