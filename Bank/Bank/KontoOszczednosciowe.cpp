@@ -16,7 +16,6 @@ void KontoOszczednosciowe::wykonajOperacjeOkresowa() {
 
     double odsetki = saldo * (oprocentowanie / 100.0);
     saldo += odsetki;
-    // Wykorzystanie bezpiecznego pobierzNumer()
     cout << "[Konto Oszczednosciowe " << pobierzNumer() << "] Automatycznie naliczono odsetki: " << odsetki << " PLN.\n";
 }
 

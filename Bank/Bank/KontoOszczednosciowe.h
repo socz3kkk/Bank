@@ -13,10 +13,8 @@ private:
 public:
     KontoOszczednosciowe(std::string numerRachunku, double poczatkoweSaldo, double oprocentowanie);
 
-    // Zmieniona nazwa, by pasowala do wirtualnej metody z Rachunek.h
     void wyswietlSzczegoly() const override;
 
-    // Zwykle metody, bez 'override', poniewaz klasa bazowa ich nie udostepnia
     void wykonajOperacjeOkresowa();
     bool wyplac(double kwota);
 
