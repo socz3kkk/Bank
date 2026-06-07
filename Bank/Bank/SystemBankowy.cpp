@@ -4,12 +4,25 @@
 
 constexpr size_t WYMAGANA_DLUGOSC_PESEL = 11;
 
-SystemBankowy::SystemBankowy(const string& nazwa) : nazwaBanku(nazwa) {
+SystemBankowy::SystemBankowy(const string& nazwa)
+    : nazwaBanku(nazwa), menedzerPlikow("baza_danych.json") { // Inicjalizacja pliku docelowego
+
     cout << "[SystemBankowy] Uruchomiono system dla banku: " << nazwaBanku << endl;
+
+    // Wczytanie danych z bazy przy uruchomieniu programu
+    menedzerPlikow.wczytajDane(bazaKlientow);
+    if (!bazaKlientow.empty()) {
+        cout << "[SystemBankowy] Wczytano " << bazaKlientow.size() << " profili klientow z bazy JSON.\n";
+    }
 }
 
 SystemBankowy::~SystemBankowy() {
+    zapiszStanSystemu(); // Zapis przed zamknieciem programu
     bazaKlientow.clear();
+}
+
+void SystemBankowy::zapiszStanSystemu() {
+    menedzerPlikow.zapiszDane(bazaKlientow);
 }
 
 Uzytkownik* SystemBankowy::zaloguj(const string& pesel, const string& haslo) const {
@@ -37,5 +50,7 @@ Uzytkownik* SystemBankowy::zarejestrujKlienta(const string& imie, const string& 
     }
 
     bazaKlientow.push_back(make_unique<Uzytkownik>(imie, nazwisko, pesel, haslo));
+
+    zapiszStanSystemu(); // Od razu zabezpieczamy dane po rejestracji nowego klienta
     return bazaKlientow.back().get();
 }
