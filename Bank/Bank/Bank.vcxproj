@@ -132,6 +132,7 @@
     <ClCompile Include="KontoWalutowe.cpp" />
     <ClCompile Include="Rachunek.cpp" />
     <ClCompile Include="SystemBankowy.cpp" />
+    <ClCompile Include="Transakcja.cpp" />
     <ClCompile Include="Uzytkownik.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +140,7 @@
     <ClInclude Include="KontoWalutowe.h" />
     <ClInclude Include="Rachunek.h" />
     <ClInclude Include="SystemBankowy.h" />
+    <ClInclude Include="Transakcja.h" />
     <ClInclude Include="Uzytkownik.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
