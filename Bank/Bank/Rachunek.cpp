@@ -9,14 +9,16 @@ string generujId() {
 
 string pobierzDate() {
     time_t now = time(0);
-    tm* ltm = localtime(&now);
-    return to_string(1900 + ltm->tm_year) + "-" + 
-           to_string(1 + ltm->tm_mon) + "-" + 
-           to_string(ltm->tm_mday);
+    tm ltm;
+    localtime_s(&ltm, &now);
+    return to_string(1900 + ltm.tm_year) + "-" +
+        to_string(1 + ltm.tm_mon) + "-" +
+        to_string(ltm.tm_mday);
 }
 
 Rachunek::Rachunek(const string& numer, double poczatkoweSaldo, const string& waluta)
-    : numerKonta(numer), saldo(poczatkoweSaldo > 0.0 ? poczatkoweSaldo : 0.0), walutaPodstawowa(waluta) {}
+    : numerKonta(numer), saldo(poczatkoweSaldo > 0.0 ? poczatkoweSaldo : 0.0), walutaPodstawowa(waluta) {
+}
 
 void Rachunek::wplac(double kwota) {
     if (kwota > 0.0) {
@@ -48,7 +50,7 @@ void Rachunek::wyswietlSzczegoly() const {
     if (!historia.empty()) {
         cout << "  Ostatnie transakcje na koncie:\n";
         for (const auto& tx : historia) {
-            cout << "   -> " << tx << "\n"; 
+            cout << "   -> " << tx << "\n";
         }
     }
 }
