@@ -1,27 +1,29 @@
 #pragma once
 #include <string>
+#include <vector>
 #include <iostream>
+#include "Transakcja.h"
 
 using namespace std;
 
 class Rachunek {
+private:
+    string numerKonta;
+    vector<Transakcja> historia;
+
 protected:
-    string numerRachunku;
+    string walutaPodstawowa;
     double saldo;
 
-    bool czyKwotaPoprawna(const double kwota) const;
-
 public:
-    Rachunek(const string& numer, const double poczatkoweSaldo);
+    Rachunek(const string& numer, double poczatkoweSaldo = 0.0, const string& waluta = "PLN");
     virtual ~Rachunek() = default;
 
-    virtual void wplac(const double kwota);
-    virtual void wyplac(const double kwota);
-    virtual double pobierzSaldo() const;
+    void wplac(double kwota);
+    bool wyplac(double kwota);
+    bool wykonajPrzelew(Rachunek* cel, double kwota);
+    virtual void wyswietlSzczegoly() const;
+
     string pobierzNumer() const;
-
-    virtual void wyswietlInformacje() const;
-    virtual void wykonajOperacjeOkresowa();
-
-    friend ostream& operator<<(ostream& os, const Rachunek& rachunek);
+    double pobierzSaldo() const;
 };

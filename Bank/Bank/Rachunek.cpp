@@ -1,49 +1,40 @@
 #include "Rachunek.h"
-#include <stdexcept>
+#include <iostream>
 
-constexpr double MIN_KWOTA = 0.0;
-
-Rachunek::Rachunek(const string& numer, const double poczatkoweSaldo)
-    : numerRachunku(numer), saldo(poczatkoweSaldo > MIN_KWOTA ? poczatkoweSaldo : MIN_KWOTA) {
+Rachunek::Rachunek(const string& numer, double poczatkoweSaldo, const string& waluta)
+    : numerKonta(numer), saldo(poczatkoweSaldo > 0.0 ? poczatkoweSaldo : 0.0), walutaPodstawowa(waluta) {
 }
 
-bool Rachunek::czyKwotaPoprawna(const double kwota) const {
-    return kwota > MIN_KWOTA;
+void Rachunek::wplac(double kwota) {
+    if (kwota > 0.0) {
+        saldo += kwota;
+    }
 }
 
-void Rachunek::wplac(const double kwota) {
-    if (!czyKwotaPoprawna(kwota)) {
-        throw invalid_argument("Kwota operacji musi byc dodatnia.");
+bool Rachunek::wyplac(double kwota) {
+    if (kwota > 0.0 && saldo >= kwota) {
+        saldo -= kwota;
+        return true;
     }
-    saldo += kwota;
+    return false;
 }
 
-void Rachunek::wyplac(const double kwota) {
-    if (!czyKwotaPoprawna(kwota)) {
-        throw invalid_argument("Kwota operacji musi byc dodatnia.");
+bool Rachunek::wykonajPrzelew(Rachunek* cel, double kwota) {
+    if (cel != nullptr && cel != this && this->wyplac(kwota)) {
+        cel->wplac(kwota);
+        return true;
     }
-    if (saldo < kwota) {
-        throw invalid_argument("Brak wystarczajacych srodkow na koncie.");
-    }
-    saldo -= kwota;
+    return false;
+}
+
+void Rachunek::wyswietlSzczegoly() const {
+    cout << "Konto: " << numerKonta << " | Saldo: " << saldo << " " << walutaPodstawowa << "\n";
+}
+
+string Rachunek::pobierzNumer() const {
+    return numerKonta;
 }
 
 double Rachunek::pobierzSaldo() const {
     return saldo;
-}
-
-string Rachunek::pobierzNumer() const {
-    return numerRachunku;
-}
-
-void Rachunek::wyswietlInformacje() const {
-    cout << "Konto: " << numerRachunku << " | Saldo: " << saldo << " PLN\n";
-}
-
-void Rachunek::wykonajOperacjeOkresowa() {
-}
-
-ostream& operator<<(ostream& os, const Rachunek& rachunek) {
-    os << "Konto: " << rachunek.numerRachunku << ", Saldo: " << rachunek.saldo;
-    return os;
 }
