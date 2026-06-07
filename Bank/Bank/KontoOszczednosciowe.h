@@ -13,9 +13,12 @@ private:
 public:
     KontoOszczednosciowe(std::string numerRachunku, double poczatkoweSaldo, double oprocentowanie);
 
-    void wyswietlInformacje() const override;
-    void wykonajOperacjeOkresowa() override;
-    void wyplac(const double kwota) override;
+    // Zmieniona nazwa, by pasowala do wirtualnej metody z Rachunek.h
+    void wyswietlSzczegoly() const override;
+
+    // Zwykle metody, bez 'override', poniewaz klasa bazowa ich nie udostepnia
+    void wykonajOperacjeOkresowa();
+    bool wyplac(double kwota);
 
     friend std::ostream& operator<<(std::ostream& os, const KontoOszczednosciowe& konto);
 };

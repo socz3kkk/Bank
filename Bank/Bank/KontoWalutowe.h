@@ -12,9 +12,9 @@ private:
 public:
     KontoWalutowe(std::string numerRachunku, double poczatkoweSaldo, std::string waluta, double kursWymiany);
 
-    void wyswietlInformacje() const override;
-    void wykonajOperacjeOkresowa() override;
-    void wyplac(const double kwota) override;
+    void wyswietlSzczegoly() const override;
+    void wykonajOperacjeOkresowa();
+    bool wyplac(double kwota);
 
     bool wplacWalute(double kwota);
     bool wyplacWalute(double kwota);
