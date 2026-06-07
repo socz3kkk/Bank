@@ -12,11 +12,14 @@ private:
 
 public:
     KontoOszczednosciowe(std::string numerRachunku, double poczatkoweSaldo, double oprocentowanie);
-
     void wyswietlSzczegoly() const override;
-
     void wykonajOperacjeOkresowa();
     bool wyplac(double kwota);
 
     friend std::ostream& operator<<(std::ostream& os, const KontoOszczednosciowe& konto);
+
+    string getTypKonta() const override { return "Oszczednosciowe"; }
+    double getOprocentowanie() const { return oprocentowanie; }
+    int getLiczbaWyplat() const { return liczbaWyplat; }
+    void setLiczbaWyplat(int lw) { liczbaWyplat = lw; }
 };
