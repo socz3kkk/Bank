@@ -11,14 +11,15 @@ private:
 
 public:
     KontoWalutowe(std::string numerRachunku, double poczatkoweSaldo, std::string waluta, double kursWymiany);
-
-    void wyswietlInformacje() const override;
-    void wykonajOperacjeOkresowa() override;
-    void wyplac(const double kwota) override;
-
+    void wyswietlSzczegoly() const override;
+    void wykonajOperacjeOkresowa();
+    bool wyplac(double kwota);
     bool wplacWalute(double kwota);
     bool wyplacWalute(double kwota);
     double wymienNaPln(double kwotaWaluty);
 
     friend std::ostream& operator<<(std::ostream& os, const KontoWalutowe& konto);
+
+    string getTypKonta() const override { return "Walutowe"; }
+    double getKurs() const { return kursWymiany; }
 };

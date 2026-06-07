@@ -1,42 +1,64 @@
 #include "Rachunek.h"
-#include <stdexcept>
+#include <iostream>
+#include <ctime>
 
-constexpr double MIN_KWOTA = 0.0;
-
-Rachunek::Rachunek(const string& numer, const double poczatkowe_saldo)
-    : numer_rachunku(numer), saldo(poczatkowe_saldo > MIN_KWOTA ? poczatkowe_saldo : MIN_KWOTA) {
+string generujId() {
+    static int licznik = 1000;
+    return "TX-" + to_string(licznik++);
 }
 
-bool Rachunek::czyKwotaPoprawna(const double kwota) const {
-    return kwota > MIN_KWOTA;
+string pobierzDate() {
+    time_t now = time(0);
+    tm ltm;
+    localtime_s(&ltm, &now);
+    return to_string(1900 + ltm.tm_year) + "-" +
+        to_string(1 + ltm.tm_mon) + "-" +
+        to_string(ltm.tm_mday);
 }
 
-void Rachunek::wplac(const double kwota) {
-    if (!czyKwotaPoprawna(kwota)) {
-        throw invalid_argument("Kwota operacji musi byc dodatnia.");
-    }
-    saldo += kwota;
+Rachunek::Rachunek(const string& numer, double poczatkoweSaldo, const string& waluta)
+    : numerKonta(numer), saldo(poczatkoweSaldo > 0.0 ? poczatkoweSaldo : 0.0), walutaPodstawowa(waluta) {
 }
 
-void Rachunek::wyplac(const double kwota) {
-    if (!czyKwotaPoprawna(kwota)) {
-        throw invalid_argument("Kwota operacji musi byc dodatnia.");
+void Rachunek::wplac(double kwota) {
+    if (kwota > 0.0) {
+        saldo += kwota;
+        historia.push_back(Transakcja(generujId(), "Wplata Srodkow", kwota, pobierzDate()));
     }
-    if (saldo < kwota) {
-        throw invalid_argument("Brak wystarczajacych srodkow na koncie.");
+}
+
+bool Rachunek::wyplac(double kwota) {
+    if (kwota > 0.0 && saldo >= kwota) {
+        saldo -= kwota;
+        historia.push_back(Transakcja(generujId(), "Wyplata Srodkow", kwota, pobierzDate()));
+        return true;
     }
-    saldo -= kwota;
+    return false;
+}
+
+bool Rachunek::wykonajPrzelew(Rachunek* cel, double kwota) {
+    if (cel != nullptr && cel != this && this->wyplac(kwota)) {
+        cel->wplac(kwota);
+        historia.push_back(Transakcja(generujId(), "Przelew Wychodzacy", kwota, pobierzDate()));
+        return true;
+    }
+    return false;
+}
+
+void Rachunek::wyswietlSzczegoly() const {
+    cout << "Konto: " << numerKonta << " | Saldo: " << saldo << " " << walutaPodstawowa << "\n";
+    if (!historia.empty()) {
+        cout << "  Ostatnie transakcje na koncie:\n";
+        for (const auto& tx : historia) {
+            cout << "   -> " << tx << "\n";
+        }
+    }
+}
+
+string Rachunek::pobierzNumer() const {
+    return numerKonta;
 }
 
 double Rachunek::pobierzSaldo() const {
     return saldo;
-}
-
-string Rachunek::pobierzNumer() const {
-    return numer_rachunku;
-}
-
-ostream& operator<<(ostream& os, const Rachunek& rachunek) {
-    os << "Konto nr: " << rachunek.numer_rachunku << " | Saldo: " << rachunek.saldo << " PLN";
-    return os;
 }

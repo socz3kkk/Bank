@@ -5,7 +5,7 @@
 using namespace std;
 
 KontoWalutowe::KontoWalutowe(string numerRachunku, double poczatkoweSaldo, string waluta, double kursWymiany)
-    : Rachunek(numerRachunku, poczatkoweSaldo), waluta(waluta), kursWymiany(kursWymiany) {
+    : Rachunek(numerRachunku, poczatkoweSaldo, waluta), waluta(waluta), kursWymiany(kursWymiany) {
     if (kursWymiany <= 0.0) {
         throw std::invalid_argument("Kurs wymiany musi byc wiekszy od zera.");
     }
@@ -15,16 +15,12 @@ KontoWalutowe::KontoWalutowe(string numerRachunku, double poczatkoweSaldo, strin
 }
 
 void KontoWalutowe::wykonajOperacjeOkresowa() {
-    cout << "[Konto Walutowe " << numerRachunku << "] Zweryfikowano stabilnosc waluty " << waluta << ". Kurs: " << kursWymiany << " PLN.\n";
+    cout << "[Konto Walutowe " << pobierzNumer() << "] Zweryfikowano stabilnosc waluty " << waluta << ". Kurs: " << kursWymiany << " PLN.\n";
 }
 
-void KontoWalutowe::wyplac(const double kwota) {
-    if (kwota <= 0.0) {
-        throw std::invalid_argument("Kwota wyplaty musi byc dodatnia.");
-    }
-    if (!wyplacWalute(kwota)) {
-        throw std::runtime_error("Blad wyplaty: brak wystarczajacych srodkow w walucie " + waluta);
-    }
+bool KontoWalutowe::wyplac(double kwota) {
+    if (kwota <= 0.0) return false;
+    return wyplacWalute(kwota);
 }
 
 bool KontoWalutowe::wplacWalute(double kwota) {
@@ -56,13 +52,13 @@ double KontoWalutowe::wymienNaPln(double kwotaWaluty) {
     return wartoscBruttoPln - prowizja;
 }
 
-void KontoWalutowe::wyswietlInformacje() const {
+void KontoWalutowe::wyswietlSzczegoly() const {
     cout << *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const KontoWalutowe& konto) {
     os << "--- Konto Walutowe ---\n"
-        << "Numer: " << konto.numerRachunku << "\n"
+        << "Numer: " << konto.pobierzNumer() << "\n"
         << "Saldo: " << konto.saldo << " " << konto.waluta << "\n"
         << "Obecny kurs wymiany (do PLN): " << konto.kursWymiany << "\n";
     return os;

@@ -25,7 +25,7 @@ public:
 
     /**
      * @brief Otwiera nowe konto dla uzytkownika.
-     * @param typKonta Typ konta (Standardowe lub Kredytowe).
+     * @param typKonta Typ konta (Oszczednosciowe lub Walutowe).
      * @throws std::length_error jesli osiagnieto limit kont.
      * @throws std::invalid_argument jesli podano nieznany typ konta.
      */
@@ -37,10 +37,10 @@ public:
     void wyswietlKonta() const;
 
     /**
-     * @brief Zamyka wskazane konto uzytkownika.
-     * @param numerKonta Numer rachunku do zamkniecia.
+     * @brief Zamyka wskazane konto uzytkownika i usuwa je z systemu.
+     * @param indeks Indeks konta z listy (od 0).
      */
-    void zamknijKonto(const string& numerKonta);
+    void zamknijKonto(int indeks);
 
     /**
      * @brief Pobiera wskaznik do rachunku o zadanym indeksie.
@@ -56,6 +56,11 @@ public:
     string getNazwisko() const;
 
     const vector<unique_ptr<Rachunek>>& getKonta() const;
+
+    /**
+     * @brief Ładuje istniejące konto prosto z Bazy Danych.
+     */
+    void dodajWczytaneKonto(unique_ptr<Rachunek> konto);
 
     /**
      * @brief Przeciazenie operatora wypisywania strumieniowego.

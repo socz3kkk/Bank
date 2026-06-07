@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory> 
 #include "Uzytkownik.h"
+#include "BazaDanych.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class SystemBankowy {
 private:
     string nazwaBanku;
     vector<unique_ptr<Uzytkownik>> bazaKlientow;
+    BazaDanych menedzerPlikow;
 
 public:
     SystemBankowy(const string& nazwa);
@@ -38,4 +40,9 @@ public:
      * @throws std::invalid_argument w przypadku gdy PESEL istnieje lub ma zla dlugosc.
      */
     Uzytkownik* zarejestrujKlienta(const string& imie, const string& nazwisko, const string& pesel, const string& haslo);
+
+    void zapiszStanSystemu();
+
+    // Szuka konta o podanym numerze w calej bazie
+    Rachunek* znajdzRachunek(const string& numerKonta) const;
 };

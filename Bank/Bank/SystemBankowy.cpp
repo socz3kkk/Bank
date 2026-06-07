@@ -4,12 +4,19 @@
 
 constexpr size_t WYMAGANA_DLUGOSC_PESEL = 11;
 
-SystemBankowy::SystemBankowy(const string& nazwa) : nazwaBanku(nazwa) {
+SystemBankowy::SystemBankowy(const string& nazwa)
+    : nazwaBanku(nazwa), menedzerPlikow("baza_danych.json") {
     cout << "[SystemBankowy] Uruchomiono system dla banku: " << nazwaBanku << endl;
+    menedzerPlikow.wczytajDane(bazaKlientow);
 }
 
 SystemBankowy::~SystemBankowy() {
+    zapiszStanSystemu();
     bazaKlientow.clear();
+}
+
+void SystemBankowy::zapiszStanSystemu() {
+    menedzerPlikow.zapiszDane(bazaKlientow);
 }
 
 Uzytkownik* SystemBankowy::zaloguj(const string& pesel, const string& haslo) const {
@@ -37,5 +44,17 @@ Uzytkownik* SystemBankowy::zarejestrujKlienta(const string& imie, const string& 
     }
 
     bazaKlientow.push_back(make_unique<Uzytkownik>(imie, nazwisko, pesel, haslo));
+    zapiszStanSystemu();
     return bazaKlientow.back().get();
+}
+
+Rachunek* SystemBankowy::znajdzRachunek(const string& numerKonta) const {
+    for (const auto& uzytkownik : bazaKlientow) {
+        for (const auto& konto : uzytkownik->getKonta()) {
+            if (konto->pobierzNumer() == numerKonta) {
+                return konto.get();
+            }
+        }
+    }
+    return nullptr;
 }

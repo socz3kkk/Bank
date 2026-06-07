@@ -16,13 +16,11 @@ void KontoOszczednosciowe::wykonajOperacjeOkresowa() {
 
     double odsetki = saldo * (oprocentowanie / 100.0);
     saldo += odsetki;
-    cout << "[Konto Oszczednosciowe " << numerRachunku << "] Automatycznie naliczono odsetki: " << odsetki << " PLN.\n";
+    cout << "[Konto Oszczednosciowe " << pobierzNumer() << "] Automatycznie naliczono odsetki: " << odsetki << " PLN.\n";
 }
 
-void KontoOszczednosciowe::wyplac(const double kwota) {
-    if (kwota <= 0.0) {
-        throw std::invalid_argument("Kwota wyplaty musi byc dodatnia.");
-    }
+bool KontoOszczednosciowe::wyplac(double kwota) {
+    if (kwota <= 0.0) return false;
 
     double calkowityKoszt = kwota;
     if (liczbaWyplat >= MAX_DARMOWYCH_WYPLAT) {
@@ -30,20 +28,21 @@ void KontoOszczednosciowe::wyplac(const double kwota) {
     }
 
     if (saldo < calkowityKoszt) {
-        throw std::runtime_error("Brak wystarczajacych srodkow na koncie oszczednosciowym (uwzgledniajac prowizje " + to_string(OPLATA_ZA_WYPLATE) + " PLN).");
+        return false;
     }
 
     saldo -= calkowityKoszt;
     liczbaWyplat++;
+    return true;
 }
 
-void KontoOszczednosciowe::wyswietlInformacje() const {
+void KontoOszczednosciowe::wyswietlSzczegoly() const {
     cout << *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const KontoOszczednosciowe& konto) {
     os << "--- Konto Oszczednosciowe ---\n"
-        << "Numer: " << konto.numerRachunku << "\n"
+        << "Numer: " << konto.pobierzNumer() << "\n"
         << "Saldo: " << konto.saldo << " PLN\n"
         << "Oprocentowanie: " << konto.oprocentowanie << "%\n"
         << "Wykonane wyplaty: " << konto.liczbaWyplat << "\n";

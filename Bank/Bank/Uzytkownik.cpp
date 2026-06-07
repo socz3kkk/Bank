@@ -1,10 +1,21 @@
 #include "Uzytkownik.h"
-#include "Kredytowy.h" 
+#include "Rachunek.h"
+#include "KontoOszczednosciowe.h"
+#include "KontoWalutowe.h"
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <random>
 
 using namespace std;
+
+string generujLosowyNumerKonta() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> zakres(100000, 999999);
+
+    return "PL" + to_string(zakres(gen));
+}
 
 Uzytkownik::Uzytkownik(const string& imie, const string& nazwisko, const string& pesel, const string& haslo)
     : imie(imie), nazwisko(nazwisko), pesel(pesel), haslo(haslo) {
@@ -20,19 +31,19 @@ void Uzytkownik::otworzKonto(const string& typKonta) {
         throw length_error("Odmowa! Osiagnieto maksymalny limit kont dla tego profilu.");
     }
 
-    string przykladowyNumer = "PL123456789_" + to_string(mojeKonta.size() + 1);
+    string unikalnyNumer = generujLosowyNumerKonta();
 
-    if (typKonta == "Kredytowe") {
-        mojeKonta.push_back(make_unique<Kredytowy>(przykladowyNumer, 0.0, 5000.0));
+    if (typKonta == "Oszczednosciowe") {
+        mojeKonta.push_back(make_unique<KontoOszczednosciowe>(unikalnyNumer, 0.0, 5.0));
     }
-    else if (typKonta == "Standardowe") {
-        mojeKonta.push_back(make_unique<Rachunek>(przykladowyNumer, 0.0));
+    else if (typKonta == "Walutowe") {
+        mojeKonta.push_back(make_unique<KontoWalutowe>(unikalnyNumer, 0.0, "EUR", 4.30));
     }
     else {
         throw invalid_argument("Nieznany typ konta!");
     }
 
-    cout << "[SUKCES] Otworzono nowe konto typu: " << typKonta << " (" << przykladowyNumer << ")\n";
+    cout << "[SUKCES] Otworzono nowe konto typu: " << typKonta << " (" << unikalnyNumer << ")\n";
 }
 
 void Uzytkownik::wyswietlKonta() const {
@@ -42,12 +53,22 @@ void Uzytkownik::wyswietlKonta() const {
     }
 
     for (size_t i = 0; i < mojeKonta.size(); i++) {
-        cout << i + 1 << ". Konto nr: " << mojeKonta[i]->pobierzNumer() << "\n";
+        cout << i + 1 << ". ";
+        mojeKonta[i]->wyswietlSzczegoly();
+        cout << "\n";
     }
 }
 
-void Uzytkownik::zamknijKonto(const string& numerKonta) {
-    cout << "Zamykanie konta " << numerKonta << "...\n";
+void Uzytkownik::zamknijKonto(int indeks) {
+    if (mojeKonta.empty()) {
+        throw out_of_range("Brak otwartych kont do zamkniecia!");
+    }
+    if (indeks < 0 || indeks >= mojeKonta.size()) {
+        throw out_of_range("Nieprawidlowy indeks konta.");
+    }
+
+    mojeKonta.erase(mojeKonta.begin() + indeks);
+    cout << "[SUKCES] Konto zostalo pomyslnie zamkniete i usuniete z systemu.\n";
 }
 
 Rachunek* Uzytkownik::pobierzRachunek(int indeks) {
@@ -65,9 +86,12 @@ string Uzytkownik::getHaslo() const { return haslo; }
 string Uzytkownik::getImie() const { return imie; }
 string Uzytkownik::getNazwisko() const { return nazwisko; }
 
-const vector<unique_ptr<Rachunek>>& Uzytkownik::getKonta() const
-{
-    return mojeKonta;
+const vector<unique_ptr<Rachunek>>& Uzytkownik::getKonta() const { return mojeKonta; }
+
+void Uzytkownik::dodajWczytaneKonto(unique_ptr<Rachunek> konto) {
+    if (konto != nullptr) {
+        mojeKonta.push_back(move(konto));
+    }
 }
 
 ostream& operator<<(ostream& os, const Uzytkownik& u) {
