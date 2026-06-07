@@ -3,8 +3,8 @@
 
 constexpr double MIN_KWOTA = 0.0;
 
-Rachunek::Rachunek(const string& numer, const double poczatkowe_saldo)
-    : numer_rachunku(numer), saldo(poczatkowe_saldo > MIN_KWOTA ? poczatkowe_saldo : MIN_KWOTA) {
+Rachunek::Rachunek(const string& numer, const double poczatkoweSaldo)
+    : numerRachunku(numer), saldo(poczatkoweSaldo > MIN_KWOTA ? poczatkoweSaldo : MIN_KWOTA) {
 }
 
 bool Rachunek::czyKwotaPoprawna(const double kwota) const {
@@ -33,10 +33,17 @@ double Rachunek::pobierzSaldo() const {
 }
 
 string Rachunek::pobierzNumer() const {
-    return numer_rachunku;
+    return numerRachunku;
+}
+
+void Rachunek::wyswietlInformacje() const {
+    cout << "Konto: " << numerRachunku << " | Saldo: " << saldo << " PLN\n";
+}
+
+void Rachunek::wykonajOperacjeOkresowa() {
 }
 
 ostream& operator<<(ostream& os, const Rachunek& rachunek) {
-    os << "Konto nr: " << rachunek.numer_rachunku << " | Saldo: " << rachunek.saldo << " PLN";
+    os << "Konto: " << rachunek.numerRachunku << ", Saldo: " << rachunek.saldo;
     return os;
 }
