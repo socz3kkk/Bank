@@ -6,14 +6,13 @@ using namespace std;
 
 class Rachunek {
 protected:
-    string numer_rachunku;
+    string numerRachunku;
     double saldo;
 
-    // Metoda weryfikujaca czy wprowadzona kwota jest dodatnia
     bool czyKwotaPoprawna(const double kwota) const;
 
 public:
-    Rachunek(const string& numer, const double poczatkowe_saldo);
+    Rachunek(const string& numer, const double poczatkoweSaldo);
     virtual ~Rachunek() = default;
 
     virtual void wplac(const double kwota);
@@ -21,6 +20,8 @@ public:
     virtual double pobierzSaldo() const;
     string pobierzNumer() const;
 
-    // Przeciazenie operatora dla latwiejszego wypisywania w konsoli
+    virtual void wyswietlInformacje() const;
+    virtual void wykonajOperacjeOkresowa();
+
     friend ostream& operator<<(ostream& os, const Rachunek& rachunek);
 };
