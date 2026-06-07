@@ -3,7 +3,6 @@
 #include <vector>
 #include <iostream>
 #include "Transakcja.h"
-
 using namespace std;
 
 class Rachunek {
@@ -26,4 +25,9 @@ public:
 
     string pobierzNumer() const;
     double pobierzSaldo() const;
+
+    virtual string getTypKonta() const { return "Bazowe"; }
+    const vector<Transakcja>& pobierzHistorie() const { return historia; }
+    string pobierzWalute() const { return walutaPodstawowa; }
+    void dodajTransakcjeDoHistorii(const Transakcja& t) { historia.push_back(t); }
 };
